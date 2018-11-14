@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import UIKit
 
 class AdsAPIHandler {
 
     func fetch(completion completionHandler: @escaping (AdsResponse?) -> Void) {
         guard let url = Endpoints.json.url() else { return }
 
-        let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
+        URLSession.shared.dataTask(with: url) { (data, _, _) in
             if let data = data {
                 do {
                     let ads = try JSONDecoder().decode(AdsResponse.self, from: data)
@@ -22,7 +23,21 @@ class AdsAPIHandler {
                     completionHandler(nil)
                 }
             }
+        }.resume()
+    }
+
+    func downloadImage(id: String, completion completionHandler: @escaping (UIImage?) -> Void) {
+        guard let url = Endpoints.image(id).url() else {
+            completionHandler(nil)
+            return
         }
-        task.resume()
+
+        URLSession.shared.dataTask(with: url, completionHandler: { (data, _, _) in
+            var image: UIImage?
+            if let data = data {
+                image = UIImage(data: data)
+            }
+            completionHandler(image)
+        }).resume()
     }
 }
