@@ -11,18 +11,23 @@ import UIKit
 class AdsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, AdViewCollectionViewCellDelegate {
 
     enum States: String {
-        case all = "Viser alle annonser"
-        case favorites = "Viser kun favoritter"
+        case all = "Annonser"
+        case favorites = "Favoritter"
     }
 
     private let api = AdsAPIHandler()
     private var favoritedAds = [AdObject]()
     private var allAds = [AdObject]()
 
-    private let favoritesSwitch: UISwitch = {
-       let favoritesSwitch = UISwitch(frame: .zero)
-        favoritesSwitch.isOn = false
-        return favoritesSwitch
+    private lazy var leftBarButtonItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(title: States.all.rawValue, style: .plain, target: self, action: #selector(pressedBackItem))
+        return item
+    }()
+
+    private lazy var rightBarButtonItem: UIBarButtonItem = {
+        let rightBarButtonItem = UIBarButtonItem(title: "Favoritter", style: .plain, target: self, action: #selector(pressedFavoritesItem))
+        rightBarButtonItem.tintColor = UIColor.red
+        return rightBarButtonItem
     }()
 
     // MARK: - View lifecycle
@@ -60,13 +65,11 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
                 }
             }
         }
-
-        favoritesSwitch.addTarget(self, action: #selector(pressToggle), for: .touchUpInside)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: favoritesSwitch)
+        navigationItem.rightBarButtonItem = rightBarButtonItem
     }
 
     private func ad(for item: Int) -> AdObject {
-        return favoritesSwitch.isOn ? favoritedAds[item] : allAds[item]
+        return States.favorites.rawValue == self.title ? favoritedAds[item] : allAds[item]
     }
 
     // MARK: - UICollectionView delegate and datasource
@@ -76,7 +79,7 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return favoritesSwitch.isOn ? favoritedAds.count : allAds.count
+        return States.favorites.rawValue == self.title ? favoritedAds.count : allAds.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -115,18 +118,27 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
 
     // MARK: - User interaction
 
-    @objc func pressToggle() {
-        if favoritesSwitch.isOn {
-            self.title = States.favorites.rawValue
-        } else {
-            self.title = States.all.rawValue
-        }
-        self.title = (favoritesSwitch.isOn ? States.favorites : States.all).rawValue
+    // TODO: should we run a animation when switching the navigation items
+
+    @objc func pressedFavoritesItem() {
+        self.title = States.favorites.rawValue
+        self.navigationItem.leftBarButtonItem = leftBarButtonItem
+        self.collectionView.reloadData()
+    }
+
+    @objc func pressedBackItem() {
+        self.title = States.all.rawValue
+        self.navigationItem.leftBarButtonItem = nil
         self.collectionView.reloadData()
     }
 
     func toogleFavorite(for ad: AdObject, checked: Bool) {
         ad.liked = checked
         self.favoritedAds = self.allAds.filter { $0.liked }
+
+        // If the user is manipulating favorites, drop them from the immediately by triggering a reload
+        if self.title == States.favorites.rawValue {
+            self.collectionView.reloadData()
+        }
     }
 }
