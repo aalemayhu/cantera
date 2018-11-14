@@ -16,7 +16,8 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
     }
 
     private let api = AdsAPIHandler()
-    private var ads = [Ad]()
+    private var favoritedAds = [Ad]()
+    private var allAds = [Ad]()
 
     private let favoritesSwitch: UISwitch = {
        let favoritesSwitch = UISwitch(frame: .zero)
@@ -37,6 +38,7 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
     }
 
     // MARK: - Private
+
     private func setup() {
 
         self.title = States.all.rawValue
@@ -51,9 +53,9 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
             if let response = response {
                 // We have to update UI in the main thread otherwise the main thread checker will kill us
                 DispatchQueue.main.async {
-                    self.ads = response.items
+                    self.allAds = response.items
                     // Drop all of the ads that are still under construction
-                    self.ads.removeAll { $0.price == nil }
+                    self.allAds.removeAll { $0.price == nil }
                     self.collectionView.reloadData()
                 }
             }
@@ -63,6 +65,10 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: favoritesSwitch)
     }
 
+    func ad(for item: Int) -> Ad {
+        return favoritesSwitch.isOn ? favoritedAds[item] : allAds[item]
+    }
+
     // MARK: - UICollectionView delegate and datasource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -70,14 +76,14 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return ads.count
+        return favoritesSwitch.isOn ? favoritedAds.count : allAds.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier, for: indexPath)
         if let cell = cell as? AdViewCollectionViewCell {
-            let ad = ads[indexPath.item]
-            cell.ad = ad            
+            let ad = self.ad(for: indexPath.item)
+            cell.ad = ad
             //   // NOTE: Check if image is already cached before download
             api.downloadImage(id: ad.image.url) { (image) in
                 if let image = image {
@@ -91,7 +97,7 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let ad = ads[indexPath.item]
+        let ad = self.ad(for: indexPath.item)
         var width = 180, height = 136
 
         if  let imageHeigth = ad.image.height {
@@ -103,22 +109,19 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let ad = ads[indexPath.item]
+        let ad = self.ad(for: indexPath.item)
         print("Image is \(ad.image)")
     }
 
     // MARK: - User interaction
 
     @objc func pressToggle() {
-        print("\(#function)")
-
         if favoritesSwitch.isOn {
-            // TODO: only show favorites now
             self.title = States.favorites.rawValue
-            return
+        } else {
+            self.title = States.all.rawValue
         }
-
-        // TODO: go back to showing all of them
-        self.title = States.all.rawValue
+        self.title = (favoritesSwitch.isOn ? States.favorites : States.all).rawValue
+        self.collectionView.reloadData()
     }
 }
