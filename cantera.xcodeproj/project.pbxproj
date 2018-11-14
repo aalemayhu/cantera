@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8442CAC3219C082C006F8A30 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC2219C082C006F8A30 /* AppDelegate.swift */; };
-		8442CAC5219C082C006F8A30 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC4219C082C006F8A30 /* ViewController.swift */; };
+		8442CAC5219C082C006F8A30 /* CanteraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC4219C082C006F8A30 /* CanteraViewController.swift */; };
 		8442CACA219C082D006F8A30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8442CAC9219C082D006F8A30 /* Assets.xcassets */; };
 		8442CACD219C082D006F8A30 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8442CACB219C082D006F8A30 /* LaunchScreen.storyboard */; };
 		8442CAD8219C082D006F8A30 /* canteraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAD7219C082D006F8A30 /* canteraTests.swift */; };
@@ -35,7 +35,7 @@
 /* Begin PBXFileReference section */
 		8442CABF219C082C006F8A30 /* cantera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cantera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8442CAC2219C082C006F8A30 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8442CAC4219C082C006F8A30 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8442CAC4219C082C006F8A30 /* CanteraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanteraViewController.swift; sourceTree = "<group>"; };
 		8442CAC9219C082D006F8A30 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8442CACC219C082D006F8A30 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8442CACE219C082D006F8A30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -141,7 +141,7 @@
 		84A18DFE219C0B5400403C42 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				8442CAC4219C082C006F8A30 /* ViewController.swift */,
+				8442CAC4219C082C006F8A30 /* CanteraViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -298,7 +298,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8442CAC5219C082C006F8A30 /* ViewController.swift in Sources */,
+				8442CAC5219C082C006F8A30 /* CanteraViewController.swift in Sources */,
 				8442CAC3219C082C006F8A30 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
