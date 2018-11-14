@@ -11,24 +11,60 @@ import XCTest
 
 class CanteraTests: XCTestCase {
 
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+    func testPayload() {
+        let data = """
+        {
+        "image": {
+        "scalable": true,
+        "width": 1024,
+        "type": "GENERAL",
+        "url": "2017/9/vertical-2/29/3/105/376/_9531505.jpg",
+        "height": 683
+        },
+        "score": "0.2679544687271118",
+        "ad-type": "REALESTATE",
+        "price": {
+        "value": 15000
+        },
+        "description": "3-roms leilightet leies!",
+        "location": "Oslo",
+        "id": "105376903",
+        "type": "AD",
+        "tracking": {
+        "adobe": {
+          "event_name": "meta_recommendation",
+          "type": "stream",
+          "category": "relevant_ad",
+          "url": "https://apps.finn.no/api/stream/discover/"
+        },
+        "ec": {
+          "inScreen": [
+            "https://www.finn.no/ec/USER/recommendationEvents?adIds=105376903&version=finn_meta_discovery_2b&recsys.uuid=80ec2f0c-44c9-435a-aeec-99e164304de9&recsys.position=recommend.app-discover.inScreen"
+          ],
+          "click": [
+            "https://www.finn.no/ec/AD/NoOfPageViews_Main?finnkode=105376903",
+            "https://www.finn.no/ec/USER/recommendationEvents?finnkode=105376903&version=finn_meta_discovery_2b&recsys.uuid=80ec2f0c-44c9-435a-aeec-99e164304de9&recsys.position=recommend.app-discover.click"
+          ]
+        }
+        },
+        "actions": {
+        "block": [
+          "https://www.finn.no/ec/USER/recommend.block?finnkode=105376903&version=finn_meta_discovery_2b&recsys.uuid=80ec2f0c-44c9-435a-aeec-99e164304de9&recsys.position=recommend.app-discover"
+        ]
+        },
+        "version": "finn_meta_discovery_2b.finn_real_estate_als_r150.recommendItems"
+        }
+        """.data(using: .utf8)
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        guard let payload = data else { XCTFail("Failed to setup payload"); return }
+        do {
+            let ad = try JSONDecoder().decode(Ad.self, from: payload)
+            XCTAssertEqual(ad.description, "3-roms leilightet leies!")
+            XCTAssertEqual(ad.price.value, 15000)
+            XCTAssertEqual(ad.location, "Oslo")
+            XCTAssertEqual(ad.image.url, "2017/9/vertical-2/29/3/105/376/_9531505.jpg")
+        } catch {
+            XCTFail(error.localizedDescription)
         }
     }
-
 }

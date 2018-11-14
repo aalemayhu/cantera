@@ -13,6 +13,15 @@
 		8442CACD219C082D006F8A30 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8442CACB219C082D006F8A30 /* LaunchScreen.storyboard */; };
 		8442CAD8219C082D006F8A30 /* canteraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAD7219C082D006F8A30 /* canteraTests.swift */; };
 		8442CAE3219C082D006F8A30 /* canteraUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAE2219C082D006F8A30 /* canteraUITests.swift */; };
+		84A18E00219C0FE400403C42 /* Ad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A18DFF219C0FE400403C42 /* Ad.swift */; };
+		84A18E01219C0FE400403C42 /* Ad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A18DFF219C0FE400403C42 /* Ad.swift */; };
+		84A18E02219C0FE400403C42 /* Ad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A18DFF219C0FE400403C42 /* Ad.swift */; };
+		84A18E04219C10EE00403C42 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A18E03219C10EE00403C42 /* Price.swift */; };
+		84A18E05219C10EE00403C42 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A18E03219C10EE00403C42 /* Price.swift */; };
+		84A18E06219C10EE00403C42 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A18E03219C10EE00403C42 /* Price.swift */; };
+		84A18E08219C124500403C42 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A18E07219C124500403C42 /* Image.swift */; };
+		84A18E09219C124500403C42 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A18E07219C124500403C42 /* Image.swift */; };
+		84A18E0A219C124500403C42 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A18E07219C124500403C42 /* Image.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +54,9 @@
 		8442CADE219C082D006F8A30 /* canteraUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = canteraUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8442CAE2219C082D006F8A30 /* canteraUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = canteraUITests.swift; sourceTree = "<group>"; };
 		8442CAE4219C082D006F8A30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		84A18DFF219C0FE400403C42 /* Ad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ad.swift; sourceTree = "<group>"; };
+		84A18E03219C10EE00403C42 /* Price.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Price.swift; sourceTree = "<group>"; };
+		84A18E07219C124500403C42 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +107,7 @@
 		8442CAC1219C082C006F8A30 /* cantera */ = {
 			isa = PBXGroup;
 			children = (
+				84E6854C219C15E40004A2FA /* Networking */,
 				84A18DFE219C0B5400403C42 /* Controller */,
 				84A18DFD219C0B5000403C42 /* View */,
 				84A18DFC219C0B4A00403C42 /* Model */,
@@ -127,6 +140,9 @@
 		84A18DFC219C0B4A00403C42 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				84A18DFF219C0FE400403C42 /* Ad.swift */,
+				84A18E03219C10EE00403C42 /* Price.swift */,
+				84A18E07219C124500403C42 /* Image.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -144,6 +160,13 @@
 				8442CAC4219C082C006F8A30 /* CanteraViewController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		84E6854C219C15E40004A2FA /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -299,7 +322,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8442CAC5219C082C006F8A30 /* CanteraViewController.swift in Sources */,
+				84A18E04219C10EE00403C42 /* Price.swift in Sources */,
 				8442CAC3219C082C006F8A30 /* AppDelegate.swift in Sources */,
+				84A18E00219C0FE400403C42 /* Ad.swift in Sources */,
+				84A18E08219C124500403C42 /* Image.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,7 +333,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84A18E01219C0FE400403C42 /* Ad.swift in Sources */,
+				84A18E09219C124500403C42 /* Image.swift in Sources */,
 				8442CAD8219C082D006F8A30 /* canteraTests.swift in Sources */,
+				84A18E05219C10EE00403C42 /* Price.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,7 +344,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84A18E02219C0FE400403C42 /* Ad.swift in Sources */,
+				84A18E0A219C124500403C42 /* Image.swift in Sources */,
 				8442CAE3219C082D006F8A30 /* canteraUITests.swift in Sources */,
+				84A18E06219C10EE00403C42 /* Price.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
