@@ -42,6 +42,12 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         self.collectionViewLayout.invalidateLayout()
     }
 
+    override func didReceiveMemoryWarning() {
+        // In the unlikely case we get a memory warning, empty out the cache.
+        api.freeUpResources()
+        super.didReceiveMemoryWarning()
+    }
+
     // MARK: - Private
 
     private func setup() {
@@ -87,22 +93,24 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         if let cell = cell as? AdViewCollectionViewCell {
             let ad = self.ad(for: indexPath.item)
             cell.ad = ad
-            //   // NOTE: Check if image is already cached before download
-            api.downloadImage(id: ad.imageURL) { (image) in
+            api.image(for: ad, completion: { image in
                 if let image = image {
                     DispatchQueue.main.async {
                         cell.imageView.image = image
                     }
                 }
-            }
+            })
             cell.delegate = self
         }
         return cell
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let detailViewController = AdsDetailViewController()
         let ad = self.ad(for: indexPath.item)
-        print("Image is \(ad.imageURL)")
+        detailViewController.ad = ad
+        detailViewController.api = self.api
+        self.navigationController?.pushViewController(detailViewController, animated: true)
     }
 
     // MARK: - User interaction

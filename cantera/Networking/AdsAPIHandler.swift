@@ -11,7 +11,9 @@ import UIKit
 
 class AdsAPIHandler {
 
-    func fetch(completion completionHandler: @escaping (AdsResponse?) -> Void) {
+    private let cache = NSCache<AnyObject, AnyObject>()
+
+    public func fetch(completion completionHandler: @escaping (AdsResponse?) -> Void) {
         guard let url = Endpoints.json.url() else { return }
 
         URLSession.shared.dataTask(with: url) { (data, _, _) in
@@ -26,7 +28,7 @@ class AdsAPIHandler {
         }.resume()
     }
 
-    func downloadImage(id: String, completion completionHandler: @escaping (UIImage?) -> Void) {
+    private func downloadImage(id: String, completion completionHandler: @escaping (UIImage?) -> Void) {
         guard let url = Endpoints.image(id).url() else {
             completionHandler(nil)
             return
@@ -37,7 +39,24 @@ class AdsAPIHandler {
             if let data = data {
                 image = UIImage(data: data)
             }
+            if let image = image {
+                self.cache.setObject(image, forKey: id as AnyObject)
+            }
             completionHandler(image)
         }).resume()
+    }
+
+    public func image(for ad: AdObject, completion completionHandler: @escaping (UIImage?) -> Void) {
+        if let image = cache.object(forKey: ad.imageURL as AnyObject) as? UIImage {
+            completionHandler(image)
+        } else {
+            downloadImage(id: ad.imageURL) { (image) in
+                completionHandler(image)
+            }
+        }
+    }
+
+    public func freeUpResources() {
+        self.cache.removeAllObjects()
     }
 }

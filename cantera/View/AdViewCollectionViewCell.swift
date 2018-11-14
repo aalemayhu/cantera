@@ -26,10 +26,16 @@ class AdViewCollectionViewCell: UICollectionViewCell {
                 self.priceContainerView.isHidden = true
             }
 
+
+            // Unfortunately, I am having issues getting dynamic height stuff to work.
+            // Instead of hitting my head against the wall for the rest of the night, I will
+            // use a artificial limitation on the text and focus on a more extensive detail view instead
+            let title = ad.title.limit(to: 25)
+
             let attributedText = NSMutableAttributedString(string: ad.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
-            attributedText.append(NSAttributedString(string: "\n\(ad.title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
+            attributedText.append(NSAttributedString(string: "\n\(title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
             descriptionTextView.attributedText = attributedText
-            descriptionTextView.sizeToFit()
+
             favoriteButton.isSelected = ad.liked
         }
     }
