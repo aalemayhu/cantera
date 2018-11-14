@@ -29,7 +29,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
             let attributedText = NSMutableAttributedString(string: ad.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
             attributedText.append(NSAttributedString(string: "\n\(ad.title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
             descriptionTextView.attributedText = attributedText
-
+            descriptionTextView.sizeToFit()
             favoriteButton.isSelected = ad.liked
         }
     }
@@ -89,8 +89,6 @@ class AdViewCollectionViewCell: UICollectionViewCell {
     // MARK: - Private
 
     private func setup() {
-        backgroundColor = .yellow
-
         priceContainerView.addSubview(priceLabel)
 
         // Constraints for the image

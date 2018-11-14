@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AdsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, AdViewCollectionViewCellDelegate {
+class AdsCollectionViewController: UICollectionViewController, AdViewCollectionViewCellDelegate {
 
     enum States: String {
         case all = "Annonser"
@@ -98,17 +98,6 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
             cell.delegate = self
         }
         return cell
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let ad = self.ad(for: indexPath.item)
-        var width = 180, height = 136
-
-        height = max(ad.imageHeight / 8, height)
-
-
-        print("width: \(width) height: \(height)")
-        return .init(width: width, height: height)
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
