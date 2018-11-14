@@ -10,25 +10,20 @@ import XCTest
 
 class CanteraUITests: XCTestCase {
 
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    // testFetchingAds is not a UI test but actually a integration test to trigger requests to the API.
+    func testFetchingAds() {
+        let expectation = XCTestExpectation(description: "Wait until we have a payload from the API")
+        let api = AdsAPIHandler()
 
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
-        XCUIApplication().launch()
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() {
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        api.fetch { (ads) in
+            if let ads = ads {
+                XCTAssertTrue(ads.items.count > 0)
+            } else {
+                XCTAssertNotNil(ads)
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 60.0)
     }
 
 }

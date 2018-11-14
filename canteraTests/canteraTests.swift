@@ -60,11 +60,23 @@ class CanteraTests: XCTestCase {
         do {
             let ad = try JSONDecoder().decode(Ad.self, from: payload)
             XCTAssertEqual(ad.description, "3-roms leilightet leies!")
-            XCTAssertEqual(ad.price.value, 15000)
+            if let price = ad.price?.value {
+                XCTAssertEqual(price, 15000)
+            } else {
+                XCTFail("Could not decode price!")
+            }
             XCTAssertEqual(ad.location, "Oslo")
             XCTAssertEqual(ad.image.url, "2017/9/vertical-2/29/3/105/376/_9531505.jpg")
         } catch {
             XCTFail(error.localizedDescription)
         }
+    }
+
+    func testEndpoints() {
+        let expected = "https://images.finncdn.no/dynamic/480x360c/2017/9/vertical-2/29/3/105/376/_9531505.jpg"
+        let actual = Endpoints.image("2017/9/vertical-2/29/3/105/376/_9531505.jpg").url()?.absoluteString
+        XCTAssertEqual(expected, actual)
+
+        XCTAssertNotNil(Endpoints.json.url())
     }
 }

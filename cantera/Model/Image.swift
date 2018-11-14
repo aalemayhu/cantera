@@ -6,10 +6,10 @@
 //  Copyright © 2018 Alexander Alemayhu. All rights reserved.
 //
 
-struct Image: Decodable {
+struct Image: Codable {
     let scalable: Bool
-    let width: Int
-    let height: Int
+    let width: Int?
     let type: String
     let url: String
+    let height: Int?
 }
