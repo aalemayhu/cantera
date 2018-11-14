@@ -70,8 +70,8 @@ class AdViewCollectionViewCell: UICollectionViewCell {
 
     private let favoriteButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setImage(UIImage(imageLiteralResourceName: "plainheart"), for: .normal)
-        button.setImage(UIImage(imageLiteralResourceName: "plainredheart"), for: .selected)
+        button.setImage(UIImage(imageLiteralResourceName: "unselected"), for: .normal)
+        button.setImage(UIImage(imageLiteralResourceName: "selected"), for: .selected)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -120,12 +120,16 @@ class AdViewCollectionViewCell: UICollectionViewCell {
 
         // Constraints for the favorite button
         NSLayoutConstraint.activate([
-            favoriteButton.topAnchor.constraint(equalTo: topAnchor, constant: 6),
-            favoriteButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6)
+            favoriteButton.topAnchor.constraint(equalTo: topAnchor),
+            favoriteButton.trailingAnchor.constraint(equalTo: trailingAnchor)
             ])
 
         self.layer.cornerRadius = 6
         self.layer.masksToBounds = true
+
+        favoriteButton.layer.cornerRadius = 6
+        favoriteButton.layer.masksToBounds = true
+        favoriteButton.layer.maskedCorners = [.layerMinXMaxYCorner]
 
         favoriteButton.addTarget(self, action: #selector(pressFavorite), for: .touchUpInside)
     }
