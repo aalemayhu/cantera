@@ -138,7 +138,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
 
     @objc func pressFavorite() {
         guard let ad = self.ad else { return }
-        self.favoriteButton.isSelected = !self.isSelected
+        self.favoriteButton.isSelected = !self.favoriteButton.isSelected
         delegate?.toogleFavorite(for: ad, checked: favoriteButton.isSelected)
     }
 }
