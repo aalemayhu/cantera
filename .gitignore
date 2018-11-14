@@ -77,3 +77,7 @@ fastlane/test_output
 
 iOSInjectionProject/
 
+# Misc
+
+.DS_Store
+.*.swp
