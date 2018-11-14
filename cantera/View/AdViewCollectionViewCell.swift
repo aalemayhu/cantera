@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol AdViewCollectionViewCellDelegate {
+    func addAdToFavorites(ad: Ad)
+}
+
 class AdViewCollectionViewCell: UICollectionViewCell {
 
     static let ReuseIdentifier = "AdCell"
@@ -27,6 +31,8 @@ class AdViewCollectionViewCell: UICollectionViewCell {
             descriptionTextView.attributedText = attributedText
         }
     }
+
+    public var delegate: AdViewCollectionViewCellDelegate?
 
     public let imageView: UIImageView = {
         let image = UIImage(imageLiteralResourceName: "placeholder")
@@ -61,7 +67,9 @@ class AdViewCollectionViewCell: UICollectionViewCell {
     }()
 
     private let favoriteButton: UIButton = {
-        let button = UIButton(type: .contactAdd)
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(imageLiteralResourceName: "plainheart"), for: .normal)
+        button.setImage(UIImage(imageLiteralResourceName: "plainredheart"), for: .selected)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -123,6 +131,8 @@ class AdViewCollectionViewCell: UICollectionViewCell {
     // MARK: - User interaction
 
     @objc func pressFavorite() {
-        print("\(#function)")
+        guard let ad = self.ad else { return }
+        delegate?.addAdToFavorites(ad: ad)
+        self.favoriteButton.isSelected = !self.isSelected
     }
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AdsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class AdsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, AdViewCollectionViewCellDelegate {
 
     enum States: String {
         case all = "Viser alle annonser"
@@ -65,7 +65,7 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: favoritesSwitch)
     }
 
-    func ad(for item: Int) -> Ad {
+    private func ad(for item: Int) -> Ad {
         return favoritesSwitch.isOn ? favoritedAds[item] : allAds[item]
     }
 
@@ -92,6 +92,7 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
                     }
                 }
             }
+            cell.delegate = self
         }
         return cell
     }
@@ -123,5 +124,10 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
         }
         self.title = (favoritesSwitch.isOn ? States.favorites : States.all).rawValue
         self.collectionView.reloadData()
+    }
+
+    func addAdToFavorites(ad: Ad) {
+        // TODO: display some kind of animation
+        self.favoritedAds.append(ad)
     }
 }
