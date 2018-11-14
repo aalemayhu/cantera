@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CanteraViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class AdsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
     enum States: String {
         case all = "Viser alle annonser"

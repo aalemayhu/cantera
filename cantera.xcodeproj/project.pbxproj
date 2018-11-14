@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8442CAC3219C082C006F8A30 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC2219C082C006F8A30 /* AppDelegate.swift */; };
-		8442CAC5219C082C006F8A30 /* CanteraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC4219C082C006F8A30 /* CanteraViewController.swift */; };
+		8442CAC5219C082C006F8A30 /* AdsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC4219C082C006F8A30 /* AdsCollectionViewController.swift */; };
 		8442CACA219C082D006F8A30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8442CAC9219C082D006F8A30 /* Assets.xcassets */; };
 		8442CACD219C082D006F8A30 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8442CACB219C082D006F8A30 /* LaunchScreen.storyboard */; };
 		8442CAD8219C082D006F8A30 /* canteraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAD7219C082D006F8A30 /* canteraTests.swift */; };
@@ -32,11 +32,11 @@
 		84DDD347219C6B9D00CDC4F0 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DDD344219C47EF00CDC4F0 /* Colors.swift */; };
 		84E68550219C18500004A2FA /* AdsAPIHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E6854F219C18500004A2FA /* AdsAPIHandler.swift */; };
 		84E68551219C1AEF0004A2FA /* AdsAPIHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E6854F219C18500004A2FA /* AdsAPIHandler.swift */; };
-		84E68554219C1D020004A2FA /* CanteraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC4219C082C006F8A30 /* CanteraViewController.swift */; };
+		84E68554219C1D020004A2FA /* AdsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC4219C082C006F8A30 /* AdsCollectionViewController.swift */; };
 		84E68556219C1D020004A2FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC2219C082C006F8A30 /* AppDelegate.swift */; };
 		84E68557219C1D020004A2FA /* canteraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAD7219C082D006F8A30 /* canteraTests.swift */; };
 		84E68558219C1D0A0004A2FA /* AdsAPIHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E6854F219C18500004A2FA /* AdsAPIHandler.swift */; };
-		84E68559219C1D0A0004A2FA /* CanteraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC4219C082C006F8A30 /* CanteraViewController.swift */; };
+		84E68559219C1D0A0004A2FA /* AdsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC4219C082C006F8A30 /* AdsCollectionViewController.swift */; };
 		84E6855B219C1D0A0004A2FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC2219C082C006F8A30 /* AppDelegate.swift */; };
 		84E6855C219C1D0A0004A2FA /* canteraUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAE2219C082D006F8A30 /* canteraUITests.swift */; };
 		84E6855E219C22590004A2FA /* AdsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E6855D219C22590004A2FA /* AdsResponse.swift */; };
@@ -65,7 +65,7 @@
 /* Begin PBXFileReference section */
 		8442CABF219C082C006F8A30 /* cantera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cantera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8442CAC2219C082C006F8A30 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8442CAC4219C082C006F8A30 /* CanteraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanteraViewController.swift; sourceTree = "<group>"; };
+		8442CAC4219C082C006F8A30 /* AdsCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsCollectionViewController.swift; sourceTree = "<group>"; };
 		8442CAC9219C082D006F8A30 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8442CACC219C082D006F8A30 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8442CACE219C082D006F8A30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -186,7 +186,7 @@
 		84A18DFE219C0B5400403C42 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				8442CAC4219C082C006F8A30 /* CanteraViewController.swift */,
+				8442CAC4219C082C006F8A30 /* AdsCollectionViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -362,7 +362,7 @@
 			files = (
 				84E68550219C18500004A2FA /* AdsAPIHandler.swift in Sources */,
 				84DDD345219C47EF00CDC4F0 /* Colors.swift in Sources */,
-				8442CAC5219C082C006F8A30 /* CanteraViewController.swift in Sources */,
+				8442CAC5219C082C006F8A30 /* AdsCollectionViewController.swift in Sources */,
 				84A18E04219C10EE00403C42 /* Price.swift in Sources */,
 				84DDD340219C30AB00CDC4F0 /* AdViewCollectionViewCell.swift in Sources */,
 				8442CAC3219C082C006F8A30 /* AppDelegate.swift in Sources */,
@@ -381,7 +381,7 @@
 				84DDD341219C33F600CDC4F0 /* AdViewCollectionViewCell.swift in Sources */,
 				84DDD33E219C28AD00CDC4F0 /* Endpoints.swift in Sources */,
 				84E68558219C1D0A0004A2FA /* AdsAPIHandler.swift in Sources */,
-				84E68559219C1D0A0004A2FA /* CanteraViewController.swift in Sources */,
+				84E68559219C1D0A0004A2FA /* AdsCollectionViewController.swift in Sources */,
 				84E6855B219C1D0A0004A2FA /* AppDelegate.swift in Sources */,
 				84E6855C219C1D0A0004A2FA /* canteraUITests.swift in Sources */,
 				84A18E01219C0FE400403C42 /* Ad.swift in Sources */,
@@ -397,7 +397,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84DDD342219C33FB00CDC4F0 /* AdViewCollectionViewCell.swift in Sources */,
-				84E68554219C1D020004A2FA /* CanteraViewController.swift in Sources */,
+				84E68554219C1D020004A2FA /* AdsCollectionViewController.swift in Sources */,
 				84E68556219C1D020004A2FA /* AppDelegate.swift in Sources */,
 				84DDD346219C6B9B00CDC4F0 /* Colors.swift in Sources */,
 				84E68557219C1D020004A2FA /* canteraTests.swift in Sources */,
