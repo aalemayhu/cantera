@@ -2,6 +2,8 @@
 
 A small app I am making for a technical challenge from FINN.no.
 
+![Screenshot](GitHub/screenshot.png)
+
 ## Structure
 
 In the top level directory of `cantera` there is the usual Xcode files.  I have
