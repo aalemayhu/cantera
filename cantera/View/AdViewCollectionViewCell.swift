@@ -9,17 +9,17 @@
 import UIKit
 
 protocol AdViewCollectionViewCellDelegate {
-    func addAdToFavorites(ad: Ad)
+    func toogleFavorite(for ad: AdObject, checked: Bool)
 }
 
 class AdViewCollectionViewCell: UICollectionViewCell {
 
     static let ReuseIdentifier = "AdCell"
-    public var ad: Ad? {
+    public var ad: AdObject? {
         didSet {
             guard let ad = ad else { return }
             // There is no guratenee that price is set
-            if let price = ad.price?.value {
+            if let price = ad.price {
                 priceLabel.text = "\(price),-"
                 self.priceContainerView.isHidden = false
             } else {
@@ -27,8 +27,10 @@ class AdViewCollectionViewCell: UICollectionViewCell {
             }
 
             let attributedText = NSMutableAttributedString(string: ad.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
-            attributedText.append(NSAttributedString(string: "\n\(ad.description)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
+            attributedText.append(NSAttributedString(string: "\n\(ad.title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
             descriptionTextView.attributedText = attributedText
+
+            favoriteButton.isSelected = ad.liked
         }
     }
 
@@ -132,7 +134,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
 
     @objc func pressFavorite() {
         guard let ad = self.ad else { return }
-        delegate?.addAdToFavorites(ad: ad)
         self.favoriteButton.isSelected = !self.isSelected
+        delegate?.toogleFavorite(for: ad, checked: favoriteButton.isSelected)
     }
 }

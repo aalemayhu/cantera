@@ -6,7 +6,7 @@
 //  Copyright © 2018 Alexander Alemayhu. All rights reserved.
 //
 
-struct Price: Codable {
+struct PriceResponse: Codable {
     // Note: We are assuming .value is a integer based on the output of the API.
     // There is probably some canonical documentation from FINN.no that can answer this.
     let value: Int

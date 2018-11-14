@@ -6,7 +6,7 @@
 //  Copyright © 2018 Alexander Alemayhu. All rights reserved.
 //
 
-struct Image: Codable {
+struct ImageResponse: Codable {
     let scalable: Bool
     let width: Int?
     let type: String

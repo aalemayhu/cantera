@@ -16,8 +16,8 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
     }
 
     private let api = AdsAPIHandler()
-    private var favoritedAds = [Ad]()
-    private var allAds = [Ad]()
+    private var favoritedAds = [AdObject]()
+    private var allAds = [AdObject]()
 
     private let favoritesSwitch: UISwitch = {
        let favoritesSwitch = UISwitch(frame: .zero)
@@ -53,7 +53,7 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
             if let response = response {
                 // We have to update UI in the main thread otherwise the main thread checker will kill us
                 DispatchQueue.main.async {
-                    self.allAds = response.items
+                    self.allAds = response.items.map { AdObject(adResponse: $0) }
                     // Drop all of the ads that are still under construction
                     self.allAds.removeAll { $0.price == nil }
                     self.collectionView.reloadData()
@@ -65,7 +65,7 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: favoritesSwitch)
     }
 
-    private func ad(for item: Int) -> Ad {
+    private func ad(for item: Int) -> AdObject {
         return favoritesSwitch.isOn ? favoritedAds[item] : allAds[item]
     }
 
@@ -85,7 +85,7 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
             let ad = self.ad(for: indexPath.item)
             cell.ad = ad
             //   // NOTE: Check if image is already cached before download
-            api.downloadImage(id: ad.image.url) { (image) in
+            api.downloadImage(id: ad.imageURL) { (image) in
                 if let image = image {
                     DispatchQueue.main.async {
                         cell.imageView.image = image
@@ -101,9 +101,8 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
         let ad = self.ad(for: indexPath.item)
         var width = 180, height = 136
 
-        if  let imageHeigth = ad.image.height {
-            height = max(imageHeigth / 8, height)
-        }
+        height = max(ad.imageHeight / 8, height)
+
 
         print("width: \(width) height: \(height)")
         return .init(width: width, height: height)
@@ -111,7 +110,7 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let ad = self.ad(for: indexPath.item)
-        print("Image is \(ad.image)")
+        print("Image is \(ad.imageURL)")
     }
 
     // MARK: - User interaction
@@ -126,8 +125,8 @@ class AdsCollectionViewController: UICollectionViewController, UICollectionViewD
         self.collectionView.reloadData()
     }
 
-    func addAdToFavorites(ad: Ad) {
-        // TODO: display some kind of animation
-        self.favoritedAds.append(ad)
+    func toogleFavorite(for ad: AdObject, checked: Bool) {
+        ad.liked = checked
+        self.favoritedAds = self.allAds.filter { $0.liked }
     }
 }

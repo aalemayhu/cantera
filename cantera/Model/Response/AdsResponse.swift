@@ -7,5 +7,5 @@
 //
 
 struct AdsResponse: Codable {
-    let items: [Ad]
+    let items: [AdResponse]
 }
