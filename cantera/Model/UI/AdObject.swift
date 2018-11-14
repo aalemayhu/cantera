@@ -8,7 +8,7 @@
 
 import Foundation
 
-class AdObject {
+class AdObject: Codable {
 
     public let price: Int?
     public let location: String

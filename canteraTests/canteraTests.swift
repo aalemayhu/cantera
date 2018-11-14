@@ -58,7 +58,7 @@ class CanteraTests: XCTestCase {
 
         guard let payload = data else { XCTFail("Failed to setup payload"); return }
         do {
-            let ad = try JSONDecoder().decode(Ad.self, from: payload)
+            let ad = try JSONDecoder().decode(AdResponse.self, from: payload)
             XCTAssertEqual(ad.description, "3-roms leilightet leies!")
             if let price = ad.price?.value {
                 XCTAssertEqual(price, 15000)
@@ -67,6 +67,14 @@ class CanteraTests: XCTestCase {
             }
             XCTAssertEqual(ad.location, "Oslo")
             XCTAssertEqual(ad.image.url, "2017/9/vertical-2/29/3/105/376/_9531505.jpg")
+
+            // Check storage manager is acting sane
+            let items: [AdObject] = [AdObject(adResponse: ad)]
+            let sm = StorageManager()
+            sm.persist(ads: items)
+            let actual = sm.savedAds()
+            XCTAssertNotNil(actual)
+            sm.purge()
         } catch {
             XCTFail(error.localizedDescription)
         }

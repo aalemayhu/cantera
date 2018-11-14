@@ -15,6 +15,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         case favorites = "Favoritter"
     }
 
+    private let storage = StorageManager()
     private let api = AdsAPIHandler()
     private var favoritedAds = [AdObject]()
     private var allAds = [AdObject]()
@@ -57,16 +58,20 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         collectionView.backgroundColor = .white
 
         // todo should we use the safe guard?
-
-        // Should we persist the ads?
-        api.fetch { (response) in
-            if let response = response {
-                // We have to update UI in the main thread otherwise the main thread checker will kill us
-                DispatchQueue.main.async {
-                    self.allAds = response.items.map { AdObject(adResponse: $0) }
-                    // Drop all of the ads that are still under construction
-                    self.allAds.removeAll { $0.price == nil }
-                    self.collectionView.reloadData()
+        if let savedAds = storage.savedAds(), savedAds.count > 0 {
+            self.allAds = savedAds
+            self.collectionView.reloadData()
+        } else {
+            api.fetch { (response) in
+                if let response = response {
+                    // We have to update UI in the main thread otherwise the main thread checker will kill us
+                    DispatchQueue.main.async {
+                        self.allAds = response.items.map { AdObject(adResponse: $0) }
+                        // Drop all of the ads that are still under construction
+                        self.allAds.removeAll { $0.price == nil }
+                        self.collectionView.reloadData()
+                        self.storage.persist(ads: self.allAds)
+                    }
                 }
             }
         }
@@ -119,6 +124,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     @objc func pressedFavoritesItem() {
         self.title = States.favorites.rawValue
         self.navigationItem.leftBarButtonItem = leftBarButtonItem
+        self.favoritedAds = self.allAds.filter { $0.liked }
         self.collectionView.reloadData()
     }
 
@@ -130,11 +136,13 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     func toogleFavorite(for ad: AdObject, checked: Bool) {
         ad.liked = checked
-        self.favoritedAds = self.allAds.filter { $0.liked }
 
         // If the user is manipulating favorites, drop them from the immediately by triggering a reload
         if self.title == States.favorites.rawValue {
             self.collectionView.reloadData()
         }
+
+        // Note: this will trigger FS sycalls for every  change, should be optimized.
+        storage.persist(ads: self.allAds)
     }
 }
