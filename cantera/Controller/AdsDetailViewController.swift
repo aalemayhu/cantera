@@ -29,9 +29,17 @@ class AdsDetailViewController: UIViewController {
         return textView
     }()
 
+    private let activityIndicator: UIActivityIndicatorView  = {
+        let activityIndicator = UIActivityIndicatorView(style: .gray)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .red
+        return activityIndicator
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        [imageView, descriptionTextView].forEach { view.addSubview($0) }
+        [imageView, descriptionTextView, activityIndicator].forEach { view.addSubview($0) }
         setup()
     }
 
@@ -39,37 +47,41 @@ class AdsDetailViewController: UIViewController {
 
     private func setup() {
         guard let ad = ad else { return }
-        self.title = ad.title.limit(to: 25)
         self.view.backgroundColor = .white
 
-        api?.image(for: ad, completion: { image in
-            if let image = image {
-                DispatchQueue.main.async {
-                    self.imageView.image = image
-                }
-            }
-        })
-
-
-        let title = ad.title
+        self.navigationItem.titleView = activityIndicator
 
         let attributedText = NSMutableAttributedString(string: ad.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
-        attributedText.append(NSAttributedString(string: "\n\(title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
+        attributedText.append(NSAttributedString(string: "\n\(ad.title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
         descriptionTextView.attributedText = attributedText
 
-
-        // Constraints for the image
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
             imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1)
             ])
 
-        // Constraints for the location and title
         NSLayoutConstraint.activate([
             descriptionTextView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -6),
             descriptionTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             descriptionTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
             ])
+
+        activityIndicator.startAnimating()
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
+        ])
+
+        api?.image(for: ad, completion: { image in
+            DispatchQueue.main.async {
+                if let image = image {
+                    self.imageView.image = image
+                } else {
+                    // bad image, could be missing on server (404) or other bad HTTP code
+                }
+                self.activityIndicator.stopAnimating()
+            }
+        })
     }
 
     // MARK: - User interaction

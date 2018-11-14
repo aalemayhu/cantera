@@ -34,7 +34,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setup()
     }
 
@@ -115,7 +114,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     // MARK: - User interaction
 
-    // TODO: should we run a animation when switching the navigation items
+    // TODO: should we run a animation when switching between the navigation items
 
     @objc func pressedFavoritesItem() {
         self.title = States.favorites.rawValue
