@@ -57,7 +57,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         self.collectionView.register(AdViewCollectionViewCell.self, forCellWithReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier)
         collectionView.backgroundColor = .white
 
-        // todo should we use the safe guard?
         if let savedAds = storage.savedAds(), savedAds.count > 0 {
             self.allAds = savedAds
             self.collectionView.reloadData()
