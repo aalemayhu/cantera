@@ -21,7 +21,6 @@ class StorageManager {
         do {
             let data = try encoder.encode(ads)
             try data.write(to: url, options: .atomic)
-            print("Everyting should at \(persistedFilePath)")
         } catch {
             fatalError(error.localizedDescription)
         }
@@ -42,8 +41,6 @@ class StorageManager {
         let url = URL(fileURLWithPath: persistedFilePath)
         do {
             try FileManager.default.removeItem(at: url)
-        } catch {
-            print("\(#function): \(error)")
-        }
+        } catch { }
     }
 }
