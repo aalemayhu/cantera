@@ -70,7 +70,7 @@ class AdsDetailViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1)
+            imageView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 1)
             ])
 
         NSLayoutConstraint.activate([
