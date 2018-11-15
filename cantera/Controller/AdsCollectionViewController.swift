@@ -20,6 +20,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     private var favoritedAds = [AdObject]()
     private var allAds = [AdObject]()
 
+    private var lastSelectedIndexPath: IndexPath?
+
     private let placeHolderImage = UIImage(imageLiteralResourceName: "placeholder")
 
     private lazy var leftBarButtonItem: UIBarButtonItem = {
@@ -38,6 +40,17 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        // This is not ideal, but by keeping track of the selected one
+        // we can update a single item instead of reloading the whole collection.
+        if let selectedIndexPath = self.lastSelectedIndexPath {
+            collectionView.reloadItems(at: [selectedIndexPath])
+            self.lastSelectedIndexPath = nil
+        }
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -118,6 +131,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = AdsDetailViewController()
         let ad = self.ad(for: indexPath.item)
+        self.lastSelectedIndexPath = indexPath
         // Note: maybe use a protocol for the detail vc, instead of exposing all of these properties.
         detailViewController.ad = ad
         detailViewController.api = self.api
