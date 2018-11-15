@@ -29,11 +29,19 @@ class AdsDetailViewController: UIViewController {
         return textView
     }()
 
+    private let favoriteButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(imageLiteralResourceName: "unselected"), for: .normal)
+        button.setImage(UIImage(imageLiteralResourceName: "selected"), for: .selected)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
     // MARK: - UIKit
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        [imageView, descriptionTextView].forEach { view.addSubview($0) }
+        [imageView, descriptionTextView, favoriteButton].forEach { view.addSubview($0) }
         setup()
     }
 
@@ -47,6 +55,8 @@ class AdsDetailViewController: UIViewController {
         guard let ad = ad else { return }
         self.view.backgroundColor = .white
 
+        self.title = "\(ad.location)"
+
         let attributedText = NSMutableAttributedString(string: ad.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         attributedText.append(NSAttributedString(string: "\n\n\(ad.title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
         if let price = ad.price {
@@ -54,6 +64,7 @@ class AdsDetailViewController: UIViewController {
                 NSAttributedString.Key.foregroundColor: UIColor.black,
                 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 22)
             ]))
+            self.title = "\(self.title!) - \(price),-"
         }
         descriptionTextView.attributedText = attributedText
 
@@ -68,6 +79,16 @@ class AdsDetailViewController: UIViewController {
             descriptionTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
             ])
 
+        NSLayoutConstraint.activate([
+            favoriteButton.topAnchor.constraint(equalTo: imageView.bottomAnchor),
+            favoriteButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor)
+        ])
+
+        favoriteButton.layer.cornerRadius = 6
+        favoriteButton.layer.masksToBounds = true
+        favoriteButton.layer.maskedCorners = [.layerMinXMaxYCorner]
+        favoriteButton.addTarget(self, action: #selector(pressFavorite), for: .touchUpInside)
+
         api?.image(for: ad, completion: { image in
             DispatchQueue.main.async {
                 if let image = image {
@@ -81,7 +102,8 @@ class AdsDetailViewController: UIViewController {
 
     // MARK: - User interaction
 
-    @objc func pressRightItem() {
-
+    @objc func pressFavorite() {
+        self.favoriteButton.isSelected = !self.favoriteButton.isSelected
+        ad?.liked = self.favoriteButton.isSelected
     }
 }

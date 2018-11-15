@@ -111,6 +111,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = AdsDetailViewController()
         let ad = self.ad(for: indexPath.item)
+        // Note: maybe use a protocol for the detail vc, instead of exposing all of these properties.
         detailViewController.ad = ad
         detailViewController.api = self.api
         self.navigationController?.pushViewController(detailViewController, animated: true)

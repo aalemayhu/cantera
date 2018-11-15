@@ -129,7 +129,6 @@ class AdViewCollectionViewCell: UICollectionViewCell {
         favoriteButton.layer.cornerRadius = 6
         favoriteButton.layer.masksToBounds = true
         favoriteButton.layer.maskedCorners = [.layerMinXMaxYCorner]
-
         favoriteButton.addTarget(self, action: #selector(pressFavorite), for: .touchUpInside)
     }
 
