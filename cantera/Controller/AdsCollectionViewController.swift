@@ -20,6 +20,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     private var favoritedAds = [AdObject]()
     private var allAds = [AdObject]()
 
+    private let placeHolderImage = UIImage(imageLiteralResourceName: "placeholder")
+
     private lazy var leftBarButtonItem: UIBarButtonItem = {
         let item = UIBarButtonItem(title: States.all.rawValue, style: .plain, target: self, action: #selector(pressedBackItem))
         return item
@@ -98,6 +100,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier, for: indexPath)
         if let cell = cell as? AdViewCollectionViewCell {
+            cell.imageView.image = self.placeHolderImage
             let ad = self.ad(for: indexPath.item)
             cell.ad = ad
             api.image(for: ad, completion: { image in
