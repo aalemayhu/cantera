@@ -69,9 +69,10 @@ these ones:
 - Transitions between view controllers.
 - User toggles the favourite buttton.
 
-I tried hard to avoid adding any third party dependency, maybe that was a
-mistake?  I could have speed up things by pulling in something like
-[FinniversKit][f] for the UI.
+It would have been cool to show different views based on the `ad-type`, maybe
+icons like FINN does?  I tried hard to avoid adding any third party dependency,
+maybe that was a mistake?  I could have speed up things by pulling in something
+like [FinniversKit][f] for the UI.
 
 One more thing. The feature I wanted to add was a collection of predefined
 layouts the user could switch between. So for ex. you would press a
