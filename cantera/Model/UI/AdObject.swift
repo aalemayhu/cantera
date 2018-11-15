@@ -14,8 +14,6 @@ class AdObject: Codable {
     public let location: String
     public let title: String
     public let imageURL: String
-    public let imageWidth: Int
-    public let imageHeight: Int
 
     public var liked: Bool
 
@@ -25,8 +23,5 @@ class AdObject: Codable {
         self.title = adResponse.description
         self.imageURL = adResponse.image.url
         self.liked = false
-
-        self.imageWidth = adResponse.image.width ?? 180
-        self.imageHeight = adResponse.image.height ?? 136
     }
 }
