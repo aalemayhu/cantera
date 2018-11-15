@@ -215,8 +215,8 @@
 			isa = PBXGroup;
 			children = (
 				84E6855D219C22590004A2FA /* AdsResponse.swift */,
-				84A18DFF219C0FE400403C42 /* AdResponse.swift */,
 				84A18E03219C10EE00403C42 /* PriceResponse.swift */,
+				84A18DFF219C0FE400403C42 /* AdResponse.swift */,
 				84A18E07219C124500403C42 /* ImageResponse.swift */,
 			);
 			path = Response;

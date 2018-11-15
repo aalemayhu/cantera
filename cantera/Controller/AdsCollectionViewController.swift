@@ -1,5 +1,5 @@
 //
-//  CanteraViewController.swift
+//  AdsCollectionViewController.swift
 //  cantera
 //
 //  Created by Alexander Alemayhu on 14/11/2018.

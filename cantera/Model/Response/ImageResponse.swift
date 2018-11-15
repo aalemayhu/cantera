@@ -1,5 +1,5 @@
 //
-//  Image.swift
+//  ImageResponse.swift
 //  cantera
 //
 //  Created by Alexander Alemayhu on 14/11/2018.
