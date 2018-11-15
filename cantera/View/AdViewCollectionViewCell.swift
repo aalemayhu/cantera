@@ -20,22 +20,17 @@ class AdViewCollectionViewCell: UICollectionViewCell {
             guard let ad = ad else { return }
             // There is no guratenee that price is set
             if let price = ad.price {
-                priceLabel.text = "\(price),-"
-                self.priceContainerView.isHidden = false
+                middleLabel.text = "\(ad.location) - \(price),-"
             } else {
-                self.priceContainerView.isHidden = true
+                middleLabel.text = ad.location
             }
-
 
             // Unfortunately, I am having issues getting dynamic height stuff to work.
             // Instead of hitting my head against the wall for the rest of the night, I will
             // use a artificial limitation on the text and focus on a more extensive detail view instead
             let title = ad.title.limit(to: 25)
-
-            let attributedText = NSMutableAttributedString(string: ad.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
-            attributedText.append(NSAttributedString(string: "\n\(title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
+            let attributedText = NSMutableAttributedString(string: title, attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
             descriptionTextView.attributedText = attributedText
-
             favoriteButton.isSelected = ad.liked
         }
     }
@@ -50,7 +45,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
 
-    private let priceLabel: UILabel = {
+    private let middleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 12)
@@ -59,7 +54,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
         return label
     }()
 
-    private let priceContainerView: UIView = {
+    private let middleLabelContainerView: UIView = {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.backgroundColor = .priceBackgroundColor
@@ -84,7 +79,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        [imageView, priceContainerView, descriptionTextView, favoriteButton].forEach { addSubview($0) }
+        [imageView, middleLabelContainerView, descriptionTextView, favoriteButton].forEach { addSubview($0) }
         setup()
     }
 
@@ -95,7 +90,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
     // MARK: - Private
 
     private func setup() {
-        priceContainerView.addSubview(priceLabel)
+        middleLabelContainerView.addSubview(middleLabel)
 
         // Constraints for the image
         NSLayoutConstraint.activate([
@@ -106,18 +101,18 @@ class AdViewCollectionViewCell: UICollectionViewCell {
 
         // Constraints for the price
         NSLayoutConstraint.activate([
-            priceContainerView.topAnchor.constraint(equalTo: imageView.bottomAnchor),
-            priceContainerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            priceContainerView.widthAnchor.constraint(equalTo: widthAnchor),
-            priceContainerView.heightAnchor.constraint(equalTo: priceLabel.heightAnchor, multiplier: 1.5),
+            middleLabelContainerView.topAnchor.constraint(equalTo: imageView.bottomAnchor),
+            middleLabelContainerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            middleLabelContainerView.widthAnchor.constraint(equalTo: widthAnchor),
+            middleLabelContainerView.heightAnchor.constraint(equalTo: middleLabel.heightAnchor, multiplier: 1.5),
             // The label
-            priceLabel.leadingAnchor.constraint(equalTo: priceContainerView.leadingAnchor, constant: 12),
-            priceLabel.centerYAnchor.constraint(equalTo: priceContainerView.centerYAnchor, constant: -3)
+            middleLabel.leadingAnchor.constraint(equalTo: middleLabelContainerView.leadingAnchor, constant: 12),
+            middleLabel.centerYAnchor.constraint(equalTo: middleLabelContainerView.centerYAnchor, constant: -3)
             ])
 
         // Constraints for the location and title
         NSLayoutConstraint.activate([
-            descriptionTextView.topAnchor.constraint(equalTo: priceContainerView.bottomAnchor, constant: -6),
+            descriptionTextView.topAnchor.constraint(equalTo: middleLabelContainerView.bottomAnchor, constant: -6),
             descriptionTextView.leadingAnchor.constraint(equalTo: leadingAnchor),
             descriptionTextView.trailingAnchor.constraint(equalTo: trailingAnchor)
             ])
