@@ -1,5 +1,5 @@
 //
-//  StorageManager.swift
+//  StorageHandler.swift
 //  cantera
 //
 //  Created by Alexander Alemayhu on 14/11/2018.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class StorageManager {
+class StorageHandler {
 
     private let persistedFilePath: String = {
         let dir = NSHomeDirectory()

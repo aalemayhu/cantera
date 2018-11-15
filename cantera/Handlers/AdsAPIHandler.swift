@@ -11,6 +11,20 @@ import UIKit
 
 class AdsAPIHandler {
 
+    enum Endpoints {
+        case json
+        case image(String)
+
+        func url() -> URL? {
+            switch self {
+            case .json:
+                return URL(string: "https://gist.githubusercontent.com/3lvis/3799feea005ed49942dcb56386ecec2b/raw/63249144485884d279d55f4f3907e37098f55c74/discover.json")
+            case .image(let id):
+                return URL(string: "https://images.finncdn.no/dynamic/480x360c/\(id)")
+            }
+        }
+    }
+
     private let cache = NSCache<AnyObject, AnyObject>()
 
     public var cacheLimit: Int {

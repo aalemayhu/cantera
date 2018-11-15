@@ -10,8 +10,7 @@ In the top level directory of `cantera` there is the usual Xcode files.  I have
 tried to structure everything in small groups, explained below with clickable
 links for your convenience ;)
 
-- [Storage](cantera/Storage) - wrapper to read / write JSON from / to application sandbox
-- [Networking](cantera/Networking/) - contains URLSession wrapper functions to fetch the JSON payload, download images, endpoints, and image cache handling.
+- [Handlers](cantera/Handlers) - wrapper to read / write JSON from / to application sandbox, URLSession wrapper functions to fetch the JSON payload, download images, endpoints, and image cache handling.
 - [Extensions](cantera/Extensions/) - extensions to UIColor and String for convenience
 - [Controller](cantera/Controller) - the view controllers used in the app
 - [View](cantera/View/) - contains the collection view cell for the ads controller

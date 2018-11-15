@@ -15,7 +15,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         case favorites = "Favoritter"
     }
 
-    private let storage = StorageManager()
+    private let storage = StorageHandler()
     private let api = AdsAPIHandler()
     private var favoritedAds = [AdObject]()
     private var allAds = [AdObject]()
