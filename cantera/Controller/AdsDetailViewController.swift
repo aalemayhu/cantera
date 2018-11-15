@@ -17,7 +17,7 @@ class AdsDetailViewController: UIViewController {
         let image = UIImage(imageLiteralResourceName: "placeholder")
         let imageView = UIImageView(image: image)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
 
@@ -69,7 +69,7 @@ class AdsDetailViewController: UIViewController {
         descriptionTextView.attributedText = attributedText
 
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 6),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1)
             ])
 
