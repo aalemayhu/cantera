@@ -16,10 +16,38 @@ links for your convenience ;)
 - [View](cantera/View/) - contains the collection view cell for the ads controller
 - [Model](cantera/Model/) - split into API response model and UI model
 
-TODO: add a proper description
 
-TODO: higlight interesting bits in the code
+## Design
 
+The app consists mainly of two view controlllers [AdsCollectionViewController](cantera/Controller/AdsCollectionViewController.swift) and 
+[AdsDetailViewController](cantera/Controller/AdsDetailViewController.swift). The AdsCollectionViewController let's you pick advertisements from the grid
+which are then opening up in the detail view. I was initially going to with a
+UISwitch to toggle between all ads and the favourites, but after asking for
+feedback from a friend. He suggested instead to use bar button items and a
+stronger colour for the favorite icon. I incorporated his feedback.
+
+
+Hmm, not sure if there is any interesting bits worth mentioning from the code, but if you are interested
+in stats below is the outpout of [cloc](github.com/AlDanial/cloc):
+
+```
+$ cloc .
+      32 text files.
+      31 unique files.
+      11 files ignored.
+
+github.com/AlDanial/cloc v 1.78  T=1.04 s (21.1 files/s, 1093.7 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+Swift                           15            130            139            557
+JSON                             5              0              0            227
+Markdown                         1             20              0             43
+YAML                             1              2              0             24
+-------------------------------------------------------------------------------
+SUM:                            22            152            139            851
+-------------------------------------------------------------------------------
+```
 
 ## Potential improvements
 
