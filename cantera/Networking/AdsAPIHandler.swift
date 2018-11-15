@@ -34,7 +34,7 @@ class AdsAPIHandler {
             return
         }
 
-        URLSession.shared.dataTask(with: url, completionHandler: { (data, res, err) in
+        URLSession.shared.dataTask(with: url, completionHandler: { (data, _, _) in
             var image: UIImage?
             if let data = data {
                 image = UIImage(data: data)
