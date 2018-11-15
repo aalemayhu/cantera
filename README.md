@@ -10,7 +10,7 @@ In the top level directory of `cantera` there is the usual Xcode files.  I have
 tried to structure everything in small groups, explained below with clickable
 links for your convenience ;)
 
-- [Storage](cantera/Storage) - wrapper to read / write JSON from application sandbox
+- [Storage](cantera/Storage) - wrapper to read / write JSON from / to application sandbox
 - [Networking](cantera/Networking/) - contains URLSession wrapper functions to fetch the JSON payload, download images, endpoints, and image cache handling.
 - [Extensions](cantera/Extensions/) - extensions to UIColor and String for convenience
 - [Controller](cantera/Controller) - the view controllers used in the app
@@ -21,9 +21,12 @@ TODO: add a proper description
 
 TODO: higlight interesting bits in the code
 
-TODO: mention potential improvements to the codebase
 
 ## Potential improvements
+
+There is some copy / pasta in between the view controllers. Would have been
+nice to plan out better and create separate view component classes that could
+be reused across them f. ex. the favourite button.
 
 Error states are not being handled at all. They should be addressed gracefully
 with sane default behaviour. I feel like the ads view controller could have
