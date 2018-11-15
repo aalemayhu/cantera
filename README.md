@@ -81,6 +81,7 @@ Misc topics
 - Cleanup strategy for persisted file
 - Mentioned earlier above, but a proper error strategy
 - Performance tuning using instruments
+- Polish the detail view of an ad (fix orientation)
 
 One more thing. The feature I wanted to add was a collection of predefined
 layouts the user could switch between. So for ex. you would press a

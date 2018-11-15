@@ -37,7 +37,17 @@ class AdsDetailViewController: UIViewController {
         return button
     }()
 
-    // MARK: - UIKit
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+
+    // MARK: - View lifecycle
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+        UINavigationController.attemptRotationToDeviceOrientation()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

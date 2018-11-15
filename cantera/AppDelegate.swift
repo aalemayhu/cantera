@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 12
-        layout.sectionInset = UIEdgeInsets(top: 12, left: 0, bottom: 0, right: 0)
+        layout.sectionInset = UIEdgeInsets(top: 12, left: 6, bottom: 0, right: 6)
         layout.itemSize = .init(width: 180, height: 136)
         layout.scrollDirection = .vertical
         let rootViewController = AdsCollectionViewController(collectionViewLayout: layout)
