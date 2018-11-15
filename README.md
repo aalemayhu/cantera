@@ -2,9 +2,7 @@
 
 A small app I am making for a technical challenge from FINN.no.
 
-Note: I have only run the code on simulators, so there might be some surprises
-in the real world.
-
+>Note: I have only run the code on simulators, so there might be some surprises in the real world.
 
 ![Screenshot](GitHub/screenshot.png)
 
@@ -25,11 +23,10 @@ links for your convenience ;)
 
 The app consists mainly of two view controlllers [AdsCollectionViewController](cantera/Controller/AdsCollectionViewController.swift) and 
 [AdsDetailViewController](cantera/Controller/AdsDetailViewController.swift). The AdsCollectionViewController let's you pick advertisements from the grid
-which are then opening up in the detail view. I was initially going to with a
+which are then opened in the detail view. I was initially going to with a
 UISwitch to toggle between all ads and the favourites, but after asking for
 feedback from a friend. He suggested instead to use bar button items and a
 stronger colour for the favorite icon. I incorporated his feedback.
-
 
 Hmm, not sure if there is any interesting bits worth mentioning from the code, but if you are interested
 in stats below is the outpout of [cloc](github.com/AlDanial/cloc):
