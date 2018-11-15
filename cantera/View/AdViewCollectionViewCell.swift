@@ -29,8 +29,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
             // Instead of hitting my head against the wall for the rest of the night, I will
             // use a artificial limitation on the text and focus on a more extensive detail view instead
             let title = ad.title.limit(to: 25)
-            let attributedText = NSMutableAttributedString(string: title, attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
-            descriptionTextView.attributedText = attributedText
+            descriptionTextView.text = title
             favoriteButton.isSelected = ad.liked
         }
     }
