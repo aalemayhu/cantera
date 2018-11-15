@@ -57,6 +57,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         self.collectionView.register(AdViewCollectionViewCell.self, forCellWithReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier)
         collectionView.backgroundColor = .white
 
+        collectionView.contentInsetAdjustmentBehavior = .always
+
         if let savedAds = storage.savedAds(), savedAds.count > 0 {
             self.allAds = savedAds
             self.collectionView.reloadData()

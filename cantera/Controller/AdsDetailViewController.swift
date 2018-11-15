@@ -84,6 +84,7 @@ class AdsDetailViewController: UIViewController {
             favoriteButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor)
         ])
 
+        favoriteButton.isSelected = ad.liked
         favoriteButton.layer.cornerRadius = 6
         favoriteButton.layer.masksToBounds = true
         favoriteButton.layer.maskedCorners = [.layerMinXMaxYCorner]
