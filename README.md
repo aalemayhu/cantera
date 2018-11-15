@@ -76,6 +76,12 @@ icons like FINN does?  I tried hard to avoid adding any third party dependency,
 maybe that was a mistake?  I could have speed up things by pulling in something
 like [FinniversKit][f] for the UI.
 
+Misc topics
+
+- Cleanup strategy for persisted file
+- Mentioned earlier above, but a proper error strategy
+- Performance tuning using instruments
+
 One more thing. The feature I wanted to add was a collection of predefined
 layouts the user could switch between. So for ex. you would press a
 `UIBarButtonItem`  and it would change the layout from grid to table view. I
