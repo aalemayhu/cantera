@@ -119,8 +119,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     // MARK: - User interaction
 
-    // TODO: should we run a animation when switching between the navigation items
-
     @objc func pressedFavoritesItem() {
         self.title = States.favorites.rawValue
         self.navigationItem.leftBarButtonItem = leftBarButtonItem
