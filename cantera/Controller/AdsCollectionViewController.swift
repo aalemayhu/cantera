@@ -135,6 +135,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     func toogleFavorite(for ad: AdObject, checked: Bool) {
         ad.liked = checked
 
+        self.favoritedAds = self.allAds.filter { $0.liked }
+
         // If the user is manipulating favorites, drop them from the immediately by triggering a reload
         if self.title == States.favorites.rawValue {
             self.collectionView.reloadData()
