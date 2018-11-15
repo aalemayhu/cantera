@@ -2,6 +2,10 @@
 
 A small app I am making for a technical challenge from FINN.no.
 
+Note: I have only run the code on simulators, so there might be some surprises
+in the real world.
+
+
 ![Screenshot](GitHub/screenshot.png)
 
 ## Structure
@@ -62,9 +66,11 @@ than I thought it would be using Auto Layout.
 
 ## If I had more time what would I want to do
 
-It would have been awesome if I had gotten around to making some animations. At
-least one for when you selected the heart item and the other transitions
-between view controllers.
+It would have been awesome if I had gotten around to making some animations. Like
+these ones:
+
+- Transitions between view controllers.
+- User toggles the favourite buttton.
 
 I tried hard to avoid adding any third party dependency, maybe that was a
 mistake?  I could have speed up things by pulling in something like
@@ -75,9 +81,5 @@ layouts the user could switch between. So for ex. you would press a
 `UIBarButtonItem`  and it would change the layout from grid to table view. I
 mainly wanted to support three layouts, the table view type one, regular
 collection view grid and a nice full screen one.
-
-Note: I have only run the code on simulators, so there might be some surprises
-in the real world.
-
 
 [f]: https://github.com/finn-no/FinniversKit
