@@ -59,6 +59,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
         collectionView.contentInsetAdjustmentBehavior = .always
 
+        api.cacheLimit = 50
+
         if let savedAds = storage.savedAds(), savedAds.count > 0 {
             self.allAds = savedAds
             self.collectionView.reloadData()

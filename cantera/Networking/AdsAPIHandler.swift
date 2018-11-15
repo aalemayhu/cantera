@@ -13,6 +13,13 @@ class AdsAPIHandler {
 
     private let cache = NSCache<AnyObject, AnyObject>()
 
+    public var cacheLimit: Int {
+        get { return cache.countLimit }
+        set {
+            cache.countLimit = newValue
+        }
+    }
+
     public func fetch(completion completionHandler: @escaping (AdsResponse?) -> Void) {
         guard let url = Endpoints.json.url() else { return }
 
@@ -25,7 +32,7 @@ class AdsAPIHandler {
                     completionHandler(nil)
                 }
             }
-        }.resume()
+            }.resume()
     }
 
     private func downloadImage(id: String, completion completionHandler: @escaping (UIImage?) -> Void) {
