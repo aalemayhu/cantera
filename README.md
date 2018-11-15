@@ -23,5 +23,31 @@ TODO: higlight interesting bits in the code
 
 TODO: mention potential improvements to the codebase
 
-TODO: if I had more time what would I want to do
+## Potential improvements
 
+Error states are not being handled at all. They should be addressed gracefully
+with sane default behaviour. I feel like the ads view controller could have
+been done much better, getting it to support dynamic attributed text was harder
+than I thought it would be using Auto Layout.
+
+## If I had more time what would I want to do
+
+It would have been awesome if I had gotten around to making some animations. At
+least one for when you selected the heart item and the other transitions
+between view controllers.
+
+I tried hard to avoid adding any third party dependency, maybe that was a
+mistake?  I could have speed up things by pulling in something like
+[FinniversKit][f] for the UI.
+
+One more thing. The feature I wanted to add was a collection of predefined
+layouts the user could switch between. So for ex. you would press a
+`UIBarButtonItem`  and it would change the layout from grid to table view. I
+mainly wanted to support three layouts, the table view type one, regular
+collection view grid and a nice full screen one.
+
+Note: I have only run the code on simulators, so there might be some surprises
+in the real world.
+
+
+[f]: https://github.com/finn-no/FinniversKit
