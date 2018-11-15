@@ -9,7 +9,7 @@
 import UIKit
 
 protocol AdViewCollectionViewCellDelegate {
-    func toogleFavorite(for ad: AdObject, checked: Bool)
+    func toggleFavorite(for ad: AdObject, checked: Bool)
 }
 
 class AdViewCollectionViewCell: UICollectionViewCell {
@@ -138,6 +138,6 @@ class AdViewCollectionViewCell: UICollectionViewCell {
     @objc func pressFavorite() {
         guard let ad = self.ad else { return }
         self.favoriteButton.isSelected = !self.favoriteButton.isSelected
-        delegate?.toogleFavorite(for: ad, checked: favoriteButton.isSelected)
+        self.delegate?.toggleFavorite(for: ad, checked: self.favoriteButton.isSelected)
     }
 }

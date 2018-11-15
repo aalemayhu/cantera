@@ -132,7 +132,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         self.collectionView.reloadData()
     }
 
-    func toogleFavorite(for ad: AdObject, checked: Bool) {
+    func toggleFavorite(for ad: AdObject, checked: Bool) {
         ad.liked = checked
 
         self.favoritedAds = self.allAds.filter { $0.liked }
