@@ -13,7 +13,7 @@ class CanteraUITests: XCTestCase {
     // testFetchingAds is not a UI test but actually a integration test to trigger requests to the API.
     func testFetchingAds() {
         let expectation = XCTestExpectation(description: "Wait until we have a payload from the API")
-        let api = AdsAPIHandler()
+        let api = RequestHandler()
 
         api.fetch { (ads) in
             if let ads = ads {

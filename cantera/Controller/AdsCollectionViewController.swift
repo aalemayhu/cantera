@@ -16,7 +16,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     }
 
     private let storage = StorageHandler()
-    private let api = AdsAPIHandler()
+    private let api = RequestHandler()
     private var favoritedAds = [AdObject]()
     private var allAds = [AdObject]()
 

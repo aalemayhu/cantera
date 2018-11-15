@@ -82,9 +82,9 @@ class CanteraTests: XCTestCase {
 
     func testEndpoints() {
         let expected = "https://images.finncdn.no/dynamic/480x360c/2017/9/vertical-2/29/3/105/376/_9531505.jpg"
-        let actual = AdsAPIHandler.Endpoints.image("2017/9/vertical-2/29/3/105/376/_9531505.jpg").url()?.absoluteString
+        let actual = RequestHandler.Endpoints.image("2017/9/vertical-2/29/3/105/376/_9531505.jpg").url()?.absoluteString
         XCTAssertEqual(expected, actual)
 
-        XCTAssertNotNil(AdsAPIHandler.Endpoints.json.url())
+        XCTAssertNotNil(RequestHandler.Endpoints.json.url())
     }
 }

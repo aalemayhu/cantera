@@ -1,5 +1,5 @@
 //
-//  AdsAPIHandler.swift
+//  RequestHandler.swift
 //  cantera
 //
 //  Created by Alexander Alemayhu on 14/11/2018.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class AdsAPIHandler {
+class RequestHandler {
 
     enum Endpoints {
         case json

@@ -11,7 +11,7 @@ import UIKit
 class AdsDetailViewController: UIViewController {
 
     public var ad: AdObject?
-    public var api: AdsAPIHandler?
+    public var api: RequestHandler?
 
     private let imageView: UIImageView = {
         let image = UIImage(imageLiteralResourceName: "placeholder")
