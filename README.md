@@ -21,7 +21,7 @@ links for your convenience ;)
 
 ## Design
 
-The app consists mainly of two view controlllers [AdsCollectionViewController](cantera/Controller/AdsCollectionViewController.swift) and 
+The app consists mainly of two view controllers [AdsCollectionViewController](cantera/Controller/AdsCollectionViewController.swift) and 
 [AdsDetailViewController](cantera/Controller/AdsDetailViewController.swift). The AdsCollectionViewController let's you pick advertisements from the grid
 which are then opened in the detail view. I was initially going to with a
 UISwitch to toggle between all ads and the favourites, but after asking for
@@ -29,7 +29,7 @@ feedback from a friend. He suggested instead to use bar button items and a
 stronger colour for the favorite icon. I incorporated his feedback.
 
 Hmm, not sure if there is any interesting bits worth mentioning from the code, but if you are interested
-in stats below is the outpout of [cloc](github.com/AlDanial/cloc):
+in stats below is the output of [cloc](github.com/AlDanial/cloc):
 
 ```
 $ cloc .
@@ -67,7 +67,7 @@ It would have been awesome if I had gotten around to making some animations. Lik
 these ones:
 
 - Transitions between view controllers.
-- User toggles the favourite buttton.
+- User toggles the favourite button.
 
 It would have been cool to show different views based on the `ad-type`, maybe
 icons like FINN does?  I tried hard to avoid adding any third party dependency,
