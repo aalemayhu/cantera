@@ -135,17 +135,16 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
                 }
             })
             cell.delegate = self
+            cell.liked = storage.favoritedAds.contains(where: { $0.id == ad.id})
         }
         return cell
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailViewController = AdsDetailViewController()
-        let ad = self.ad(for: indexPath.item)
         self.lastSelectedIndexPath = indexPath
-        // Note: maybe use a protocol for the detail vc, instead of exposing all of these properties.
-        detailViewController.ad = ad
-        detailViewController.api = self.api
+
+        let detailViewController = AdsDetailViewController()
+        detailViewController.datasource = self
         self.navigationController?.pushViewController(detailViewController, animated: true)
     }
 
@@ -169,17 +168,26 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     }
 
     func toggleFavorite(for ad: AdObject, checked: Bool) {
-        ad.liked = checked
-
-        if ad.liked {
-            self.storage.add(ad)
-        } else {
-            self.storage.remove(ad)
-        }
-
+        checked ? storage.add(ad) : storage.remove(ad)
         // If the favorites are currently visible, reload immeditaley
         if self.title == States.favorites.rawValue {
             self.collectionView.reloadData()
         }
+    }
+}
+
+extension AdsCollectionViewController: AdsDetailViewControllerDatasource {
+
+    func isItinFavorites(ad: AdObject) -> Bool {
+        return storage.favoritedAds.contains(where: { $0.id == ad.id})
+    }
+
+    func retrieveImage(for ad: AdObject, completion: @escaping (UIImage?) -> Void) {
+        api.image(for: ad, completion: completion)
+    }
+
+    func adForDetailViewController() -> AdObject? {
+        guard let indexPath = self.lastSelectedIndexPath else { return nil }
+        return ad(for: indexPath.item)
     }
 }

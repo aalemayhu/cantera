@@ -8,10 +8,18 @@
 
 import UIKit
 
+protocol AdsDetailViewControllerDatasource {
+    func adForDetailViewController() -> AdObject?
+    func retrieveImage(for ad: AdObject, completion: @escaping (UIImage?) -> Void)
+    func isItinFavorites(ad: AdObject) -> Bool
+    func toggleFavorite(for ad: AdObject, checked: Bool)
+}
+
 class AdsDetailViewController: UIViewController {
 
-    public var ad: AdObject?
-    public var api: RequestHandler?
+    public var datasource: AdsDetailViewControllerDatasource?
+
+    private var api: RequestHandler?
 
     private let imageView: UIImageView = {
         let image = UIImage(imageLiteralResourceName: "placeholder")
@@ -62,7 +70,7 @@ class AdsDetailViewController: UIViewController {
     // MARK: - Private
 
     private func setup() {
-        guard let ad = ad else { return }
+        guard let ad = datasource?.adForDetailViewController() else { return }
         self.view.backgroundColor = .white
 
         self.title = "\(ad.location)"
@@ -94,13 +102,13 @@ class AdsDetailViewController: UIViewController {
             favoriteButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor)
         ])
 
-        favoriteButton.isSelected = ad.liked
+        favoriteButton.isSelected = datasource?.isItinFavorites(ad: ad) ?? false
         favoriteButton.layer.cornerRadius = 6
         favoriteButton.layer.masksToBounds = true
         favoriteButton.layer.maskedCorners = [.layerMinXMaxYCorner]
         favoriteButton.addTarget(self, action: #selector(pressFavorite), for: .touchUpInside)
 
-        api?.image(for: ad, completion: { image in
+        datasource?.retrieveImage(for: ad, completion: { image in
             DispatchQueue.main.async {
                 if let image = image {
                     self.imageView.image = image
@@ -114,7 +122,8 @@ class AdsDetailViewController: UIViewController {
     // MARK: - User interaction
 
     @objc func pressFavorite() {
-        self.favoriteButton.isSelected = !self.favoriteButton.isSelected
-        ad?.liked = self.favoriteButton.isSelected
+        guard let ad = datasource?.adForDetailViewController() else { return }
+        favoriteButton.isSelected = !favoriteButton.isSelected
+        datasource?.toggleFavorite(for: ad, checked: favoriteButton.isSelected)
     }
 }

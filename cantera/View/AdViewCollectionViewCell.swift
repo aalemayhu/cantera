@@ -30,7 +30,13 @@ class AdViewCollectionViewCell: UICollectionViewCell {
             // use a artificial limitation on the text and focus on a more extensive detail view instead
             let title = ad.title.limit(to: 25)
             descriptionTextView.text = title
-            favoriteButton.isSelected = ad.liked
+        }
+    }
+
+    public var liked: Bool? {
+        didSet {
+            guard let liked = liked else { return }
+            favoriteButton.isSelected = liked
         }
     }
 

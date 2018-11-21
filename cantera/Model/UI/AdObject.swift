@@ -8,21 +8,19 @@
 
 import Foundation
 
-class AdObject: Codable {
+public class AdObject: Codable {
 
     public let price: Int?
     public let location: String
     public let title: String
     public let imageURL: String
     public let id: String?
-    public var liked: Bool
 
     init(adResponse: AdResponse) {
         self.price = adResponse.price?.value
         self.location = adResponse.location
         self.title = adResponse.description
         self.imageURL = adResponse.image.url
-        self.liked = false
         self.id = adResponse.id
     }
 }
