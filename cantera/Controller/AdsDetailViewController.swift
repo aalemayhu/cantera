@@ -29,7 +29,7 @@ class AdsDetailViewController: UIViewController {
         let image = UIImage(imageLiteralResourceName: "placeholder")
         let imageView = UIImageView(image: image)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
 
@@ -49,21 +49,16 @@ class AdsDetailViewController: UIViewController {
         return button
     }()
 
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
-    }
+    private lazy var shareItem: UIBarButtonItem = {
+        let shareItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(pressShare))
+        return shareItem
+    }()
 
     // MARK: - View lifecycle
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
-        UINavigationController.attemptRotationToDeviceOrientation()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        [imageView, descriptionTextView, favoriteButton].forEach { view.addSubview($0) }
+        [imageView, descriptionTextView].forEach { view.addSubview($0) }
         setup()
     }
 
@@ -75,24 +70,25 @@ class AdsDetailViewController: UIViewController {
 
     private func setup() {
         guard let ad = datasource?.adForDetailViewController() else { return }
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: favoriteButton), shareItem]
         self.view.backgroundColor = .white
 
-        self.title = "\(ad.location)"
-
-        let attributedText = NSMutableAttributedString(string: ad.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+       let attributedText = NSMutableAttributedString(string: ad.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         attributedText.append(NSAttributedString(string: "\n\n\(ad.title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
         if let price = ad.price {
             attributedText.append(NSAttributedString(string: "\n\n\(price),-", attributes: [
                 NSAttributedString.Key.foregroundColor: UIColor.black,
                 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 22)
             ]))
-            self.title = "\(self.title!) - \(price),-"
         }
         descriptionTextView.attributedText = attributedText
 
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            imageView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 1)
+            imageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
+            imageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
+            imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
+
             ])
 
         NSLayoutConstraint.activate([
@@ -101,16 +97,12 @@ class AdsDetailViewController: UIViewController {
             descriptionTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
             ])
 
-        NSLayoutConstraint.activate([
-            favoriteButton.topAnchor.constraint(equalTo: imageView.bottomAnchor),
-            favoriteButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor)
-        ])
-
         favoriteButton.isSelected = datasource?.isItinFavorites(ad: ad) ?? false
         favoriteButton.layer.cornerRadius = 6
         favoriteButton.layer.masksToBounds = true
-        favoriteButton.layer.maskedCorners = [.layerMinXMaxYCorner]
         favoriteButton.addTarget(self, action: #selector(pressFavorite), for: .touchUpInside)
+        favoriteButton.layer.borderColor = UIColor.blue.cgColor
+        favoriteButton.layer.borderWidth = 0.5
 
         datasource?.retrieveImage(for: ad, completion: { image in
             DispatchQueue.main.async {
@@ -125,5 +117,17 @@ class AdsDetailViewController: UIViewController {
         guard let ad = datasource?.adForDetailViewController() else { return }
         favoriteButton.isSelected = !favoriteButton.isSelected
         delegate?.pressedFavorite(for: ad, checked: favoriteButton.isSelected)
+    }
+
+    @objc func pressShare() {
+        guard let ad = datasource?.adForDetailViewController() else { return }
+        var items = [Any]()
+        items.append(ad.title)
+        if let image = imageView.image {
+            items.append(image)
+        }
+        let shareViewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        shareViewController.popoverPresentationController?.sourceRect = shareItem.accessibilityFrame
+        self.present(shareViewController, animated: true, completion: nil)
     }
 }
