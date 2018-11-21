@@ -68,13 +68,14 @@ class CanteraTests: XCTestCase {
             XCTAssertEqual(ad.location, "Oslo")
             XCTAssertEqual(ad.image.url, "2017/9/vertical-2/29/3/105/376/_9531505.jpg")
             XCTAssertEqual(ad.id, "105376903")
+            XCTAssertEqual(ad.adType, AdType.realeastate)
 
             // Check storage manager is acting sane
-            let items: [AdObject] = [AdObject(adResponse: ad)]
             let sm = StorageHandler()
-            sm.persist(ads: items)
-            let actual = sm.savedAds()
+            sm.add(AdObject(adResponse: ad))
+            let actual = sm.favoritedAds
             XCTAssertNotNil(actual)
+            XCTAssertTrue(actual.count > 0)
             sm.purge()
         } catch {
             XCTFail(error.localizedDescription)

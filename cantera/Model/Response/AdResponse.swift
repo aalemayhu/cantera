@@ -14,4 +14,14 @@ struct AdResponse: Codable {
     let location: String
     let id: String
     let image: ImageResponse
+    let adType: AdType
+
+    enum CodingKeys: String, CodingKey {
+        case description = "description"
+        case price = "price"
+        case location = "location"
+        case id = "id"
+        case image = "image"
+        case adType = "ad-type"
+    }
 }
