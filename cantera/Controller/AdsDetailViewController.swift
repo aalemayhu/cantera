@@ -110,11 +110,7 @@ class AdsDetailViewController: UIViewController {
 
         datasource?.retrieveImage(for: ad, completion: { image in
             DispatchQueue.main.async {
-                if let image = image {
-                    self.imageView.image = image
-                } else {
-                    // bad image, could be missing on server (404) or other bad HTTP code
-                }
+                self.imageView.image = image ?? UIImage(imageLiteralResourceName: "missing-image")
             }
         })
     }

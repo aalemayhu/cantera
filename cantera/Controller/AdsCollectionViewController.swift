@@ -111,6 +111,23 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         }
     }
 
+    private func configure(for cell: AdViewCollectionViewCell?, with indexPath: IndexPath) {
+        guard let cell = cell else { return }
+
+        let ad = self.ad(for: indexPath.item)
+        cell.ad = ad
+
+        api.image(for: ad, completion: { image in
+            DispatchQueue.main.async {
+                cell.imageView.image = image ?? UIImage(imageLiteralResourceName: "missing-image")
+            }
+        })
+
+        cell.liked = storage.favoritedAds.contains(where: { $0.id == ad.id})
+        cell.imageView.image = self.placeHolderImage
+        cell.delegate = self
+    }
+
     // MARK: - UICollectionView delegate and datasource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -123,20 +140,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier, for: indexPath)
-        if let cell = cell as? AdViewCollectionViewCell {
-            cell.imageView.image = self.placeHolderImage
-            let ad = self.ad(for: indexPath.item)
-            cell.ad = ad
-            api.image(for: ad, completion: { image in
-                if let image = image {
-                    DispatchQueue.main.async {
-                        cell.imageView.image = image
-                    }
-                }
-            })
-            cell.delegate = self
-            cell.liked = storage.favoritedAds.contains(where: { $0.id == ad.id})
-        }
+        configure(for: cell as? AdViewCollectionViewCell, with: indexPath)
         return cell
     }
 
