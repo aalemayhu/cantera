@@ -33,10 +33,13 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         return rightBarButtonItem
     }()
 
+    private let indicatorView = LoadingIndicatorView()
+
     // MARK: - View lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.addSubview(indicatorView)
         setup()
     }
 
@@ -75,6 +78,13 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         storage.loadFavorites()
         api.cacheLimit = 50
 
+        NSLayoutConstraint.activate([
+            indicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            indicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            indicatorView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1),
+            indicatorView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1)
+        ])
+
         // If we have favorites, start there
         guard !storage.favoritedAds.isEmpty else {
             loadRemoteAds()
@@ -88,10 +98,15 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     }
 
     private func loadRemoteAds() {
+        indicatorView.animates = true
         api.fetch { (response) in
             DispatchQueue.main.async {
-                guard response > 0 else { return }
+                guard response > 0 else {
+                    self.indicatorView.animates = false
+                    return
+                }
                 self.collectionView.reloadData()
+                self.indicatorView.animates = false
             }
         }
     }
