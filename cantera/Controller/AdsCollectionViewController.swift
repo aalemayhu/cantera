@@ -35,6 +35,10 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     private let indicatorView = LoadingIndicatorView()
 
+    private var isShowingFavorites: Bool {
+        return States.favorites.rawValue == self.title
+    }
+
     // MARK: - View lifecycle
 
     override func viewDidLoad() {
@@ -85,7 +89,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             indicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             indicatorView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1),
             indicatorView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1)
-        ])
+            ])
 
         // If we have favorites, start there
         guard !storage.favoritedAds.isEmpty else {
@@ -96,7 +100,10 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     }
 
     private func ad(for item: Int) -> AdObject {
-        return States.favorites.rawValue == self.title ? storage.favoritedAds[item] : api.allAds[item]
+        guard !isShowingFavorites else {
+            return storage.favoritedAds[item]
+        }
+        return api.allAds[item]
     }
 
     private func loadRemoteAds() {
@@ -133,11 +140,14 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     // MARK: - UICollectionView delegate and datasource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return !isShowingFavorites ? AdType.allCases.count : 1
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return States.favorites.rawValue == self.title ? storage.favoritedAds.count : api.allAds.count
+        guard !isShowingFavorites else {
+            return storage.favoritedAds.count
+        }
+        return api.allAds.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -177,7 +187,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     func toggleFavorite(for ad: AdObject, checked: Bool) {
         checked ? storage.add(ad) : storage.remove(ad)
         // If the favorites are currently visible, reload immeditaley
-        if self.title == States.favorites.rawValue {
+        if isShowingFavorites {
             self.collectionView.reloadData()
         }
     }
