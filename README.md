@@ -4,8 +4,6 @@
 
 A small app I am making for a technical challenge from FINN.no.
 
->Note: I have only run the code on simulators, so there might be some surprises in the real world.
-
 ![gif](GitHub/vid.gif)
 
 ## Structure

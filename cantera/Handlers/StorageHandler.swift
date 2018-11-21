@@ -10,9 +10,9 @@ import Foundation
 
 class StorageHandler {
 
-    private let persistedFilePath: String = {
-        let dir = NSHomeDirectory()
-        return "\(dir)/cached_payload.json"
+    private let persistedFileURL: URL = {
+        let homeDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0] as URL
+        return homeDir.appendingPathComponent("cached_payload.json")
     }()
 
     private(set) var favoritedAds = [AdObject]()
@@ -20,20 +20,18 @@ class StorageHandler {
     // MARK: - Private
 
     private func persist (ads: [AdObject]) {
-        let url = URL(fileURLWithPath: persistedFilePath)
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(ads)
-            try data.write(to: url, options: .atomic)
+            try data.write(to: persistedFileURL, options: .atomic)
         } catch {
             fatalError(error.localizedDescription)
         }
     }
 
     private func savedAds() -> [AdObject]? {
-        let url = URL(fileURLWithPath: persistedFilePath)
         do {
-            let data = try Data(contentsOf: url)
+            let data = try Data(contentsOf: persistedFileURL)
             let ads = try JSONDecoder().decode([AdObject].self, from: data)
             return ads
         } catch {
@@ -50,9 +48,8 @@ class StorageHandler {
     }
 
     func purge() {
-        let url = URL(fileURLWithPath: persistedFilePath)
         do {
-            try FileManager.default.removeItem(at: url)
+            try FileManager.default.removeItem(at: persistedFileURL)
         } catch { }
     }
 
