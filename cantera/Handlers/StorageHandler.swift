@@ -15,7 +15,11 @@ class StorageHandler {
         return "\(dir)/cached_payload.json"
     }()
 
-    func persist (ads: [AdObject]) {
+    private(set) var favoritedAds = [AdObject]()
+
+    // MARK: - Private
+
+    private func persist (ads: [AdObject]) {
         let url = URL(fileURLWithPath: persistedFilePath)
         let encoder = JSONEncoder()
         do {
@@ -26,7 +30,7 @@ class StorageHandler {
         }
     }
 
-    func savedAds() -> [AdObject]? {
+    private func savedAds() -> [AdObject]? {
         let url = URL(fileURLWithPath: persistedFilePath)
         do {
             let data = try Data(contentsOf: url)
@@ -37,10 +41,33 @@ class StorageHandler {
         }
     }
 
+    // MARK: - Public
+
+    func loadFavorites() {
+        // Note: we should not assume this is guranteed to work but instead throw exception on error
+        guard let ads = savedAds() else { return }
+        favoritedAds = ads
+    }
+
     func purge() {
         let url = URL(fileURLWithPath: persistedFilePath)
         do {
             try FileManager.default.removeItem(at: url)
         } catch { }
+    }
+
+    func add(_ ad: AdObject) {
+        let match = favoritedAds.filter { $0.id == ad.id }
+        guard match.count == 0 else { return }
+
+        favoritedAds.append(ad)
+        // Note: this will trigger FS sycalls for every  change, should be optimized.
+        self.persist(ads: self.favoritedAds)
+    }
+
+    func remove(_ ad: AdObject) {
+        favoritedAds.removeAll { $0.id == ad.id }
+        // Note: this will trigger FS sycalls for every  change, should be optimized.
+        self.persist(ads: self.favoritedAds)
     }
 }

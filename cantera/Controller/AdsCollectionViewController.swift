@@ -17,8 +17,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     private let storage = StorageHandler()
     private let api = RequestHandler()
-    private var favoritedAds = [AdObject]()
-    private var allAds = [AdObject]()
 
     private var lastSelectedIndexPath: IndexPath?
 
@@ -66,38 +64,36 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     // MARK: - Private
 
     private func setup() {
-
-        self.title = States.all.rawValue
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.register(AdViewCollectionViewCell.self, forCellWithReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier)
+        collectionView.register(AdViewCollectionViewCell.self, forCellWithReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.contentInsetAdjustmentBehavior = .always
         collectionView.backgroundColor = .white
 
-        collectionView.contentInsetAdjustmentBehavior = .always
+        navigationItem.rightBarButtonItem = rightBarButtonItem
+        title = States.all.rawValue
 
+        storage.loadFavorites()
         api.cacheLimit = 50
 
-        if let savedAds = storage.savedAds(), savedAds.count > 0 {
-            self.allAds = savedAds
-            self.collectionView.reloadData()
-        } else {
-            api.fetch { (response) in
-                if let response = response {
-                    // We have to update UI in the main thread otherwise the main thread checker will kill us
-                    DispatchQueue.main.async {
-                        self.allAds = response.items.map { AdObject(adResponse: $0) }
-                        // Drop all of the ads that are still under construction
-                        self.allAds.removeAll { $0.price == nil }
-                        self.collectionView.reloadData()
-                        self.storage.persist(ads: self.allAds)
-                    }
-                }
-            }
+        // If we have favorites, start there
+        guard !storage.favoritedAds.isEmpty else {
+            loadRemoteAds()
+            return
         }
-        navigationItem.rightBarButtonItem = rightBarButtonItem
+        pressedFavoritesItem()
     }
 
     private func ad(for item: Int) -> AdObject {
-        return States.favorites.rawValue == self.title ? favoritedAds[item] : allAds[item]
+        return States.favorites.rawValue == self.title ? storage.favoritedAds[item] : api.allAds[item]
+    }
+
+    private func loadRemoteAds() {
+        api.fetch { (response) in
+            DispatchQueue.main.async {
+                guard response > 0 else { return }
+                self.collectionView.reloadData()
+            }
+        }
     }
 
     // MARK: - UICollectionView delegate and datasource
@@ -107,7 +103,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return States.favorites.rawValue == self.title ? favoritedAds.count : allAds.count
+        return States.favorites.rawValue == self.title ? storage.favoritedAds.count : api.allAds.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -143,27 +139,32 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     @objc func pressedFavoritesItem() {
         self.title = States.favorites.rawValue
         self.navigationItem.leftBarButtonItem = leftBarButtonItem
-        self.favoritedAds = self.allAds.filter { $0.liked }
         self.collectionView.reloadData()
     }
 
     @objc func pressedBackItem() {
         self.title = States.all.rawValue
         self.navigationItem.leftBarButtonItem = nil
+
+        guard api.allAds.count > 0 else {
+            loadRemoteAds()
+            return
+        }
         self.collectionView.reloadData()
     }
 
     func toggleFavorite(for ad: AdObject, checked: Bool) {
         ad.liked = checked
 
-        self.favoritedAds = self.allAds.filter { $0.liked }
+        if ad.liked {
+            self.storage.add(ad)
+        } else {
+            self.storage.remove(ad)
+        }
 
-        // If the user is manipulating favorites, drop them from the immediately by triggering a reload
+        // If the favorites are currently visible, reload immeditaley
         if self.title == States.favorites.rawValue {
             self.collectionView.reloadData()
         }
-
-        // Note: this will trigger FS sycalls for every  change, should be optimized.
-        storage.persist(ads: self.allAds)
     }
 }

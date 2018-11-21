@@ -34,20 +34,9 @@ class RequestHandler {
         }
     }
 
-    public func fetch(completion completionHandler: @escaping (AdsResponse?) -> Void) {
-        guard let url = Endpoints.json.url() else { return }
+    public var allAds = [AdObject]()
 
-        URLSession.shared.dataTask(with: url) { (data, _, _) in
-            if let data = data {
-                do {
-                    let ads = try JSONDecoder().decode(AdsResponse.self, from: data)
-                    completionHandler(ads)
-                } catch {
-                    completionHandler(nil)
-                }
-            }
-            }.resume()
-    }
+    // MARK: - Private
 
     private func downloadImage(id: String, completion completionHandler: @escaping (UIImage?) -> Void) {
         guard let url = Endpoints.image(id).url() else {
@@ -65,6 +54,26 @@ class RequestHandler {
             }
             completionHandler(image)
         }).resume()
+    }
+
+    // MARK: - Public
+
+    public func fetch(completion completionHandler: @escaping (Int) -> Void) {
+        guard let url = Endpoints.json.url() else { return }
+
+        URLSession.shared.dataTask(with: url) { (data, _, _) in
+            if let data = data {
+                do {
+                    let adsResponse =  try JSONDecoder().decode(AdsResponse.self, from: data)
+                    self.allAds = adsResponse.items.map { AdObject(adResponse: $0) }
+                    // Drop all of the ads that are missing the price
+                    self.allAds.removeAll { $0.price == nil }
+                    completionHandler(self.allAds.count)
+                } catch {
+                    completionHandler(0)
+                }
+            }
+            }.resume()
     }
 
     public func image(for ad: AdObject, completion completionHandler: @escaping (UIImage?) -> Void) {
