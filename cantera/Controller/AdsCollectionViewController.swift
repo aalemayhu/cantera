@@ -48,10 +48,12 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
         // This is not ideal, but by keeping track of the selected one
         // we can update a single item instead of reloading the whole collection.
-        if let selectedIndexPath = self.lastSelectedIndexPath {
-            collectionView.reloadItems(at: [selectedIndexPath])
-            self.lastSelectedIndexPath = nil
+        guard let selectedIndexPath = self.lastSelectedIndexPath else {
+            collectionView.reloadData()
+            return
         }
+        collectionView.reloadItems(at: [selectedIndexPath])
+        self.lastSelectedIndexPath = nil
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -149,6 +151,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
         let detailViewController = AdsDetailViewController()
         detailViewController.datasource = self
+        detailViewController.delegate = self
         self.navigationController?.pushViewController(detailViewController, animated: true)
     }
 
@@ -180,7 +183,9 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     }
 }
 
-extension AdsCollectionViewController: AdsDetailViewControllerDatasource {
+extension AdsCollectionViewController: AdsDetailViewControllerDatasource, AdsDetailViewControllerDelegate {
+
+    // Datasource
 
     func isItinFavorites(ad: AdObject) -> Bool {
         return storage.favoritedAds.contains(where: { $0.id == ad.id})
@@ -193,5 +198,16 @@ extension AdsCollectionViewController: AdsDetailViewControllerDatasource {
     func adForDetailViewController() -> AdObject? {
         guard let indexPath = self.lastSelectedIndexPath else { return nil }
         return ad(for: indexPath.item)
+    }
+
+    // Delegate
+
+    func pressedFavorite(for ad: AdObject, checked: Bool) {
+        guard checked else {
+            lastSelectedIndexPath = nil /// Handle internal inconcistentcy
+            storage.remove(ad)
+            return
+        }
+        storage.add(ad)
     }
 }

@@ -12,12 +12,16 @@ protocol AdsDetailViewControllerDatasource {
     func adForDetailViewController() -> AdObject?
     func retrieveImage(for ad: AdObject, completion: @escaping (UIImage?) -> Void)
     func isItinFavorites(ad: AdObject) -> Bool
-    func toggleFavorite(for ad: AdObject, checked: Bool)
+}
+
+protocol AdsDetailViewControllerDelegate {
+    func pressedFavorite(for ad: AdObject, checked: Bool)
 }
 
 class AdsDetailViewController: UIViewController {
 
     public var datasource: AdsDetailViewControllerDatasource?
+    public var delegate: AdsDetailViewControllerDelegate?
 
     private var api: RequestHandler?
 
@@ -120,6 +124,6 @@ class AdsDetailViewController: UIViewController {
     @objc func pressFavorite() {
         guard let ad = datasource?.adForDetailViewController() else { return }
         favoriteButton.isSelected = !favoriteButton.isSelected
-        datasource?.toggleFavorite(for: ad, checked: favoriteButton.isSelected)
+        delegate?.pressedFavorite(for: ad, checked: favoriteButton.isSelected)
     }
 }
