@@ -81,9 +81,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         navigationItem.rightBarButtonItem = rightBarButtonItem
         title = States.all.rawValue
 
-        storage.loadFavorites()
-        api.cacheLimit = 50
-
         NSLayoutConstraint.activate([
             indicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             indicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -91,12 +88,19 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             indicatorView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1)
             ])
 
+        api.cacheLimit = 50
+        do {
+            try storage.loadFavorites()
+            pressedFavoritesItem()
+        } catch {
+            // Note: Still not sure what todo when this fails...
+        }
+
         // If we have favorites, start there
         guard !storage.favoritedAds.isEmpty else {
             loadRemoteAds()
             return
         }
-        pressedFavoritesItem()
     }
 
     private func ad(for item: Int) -> AdObject {
@@ -167,6 +171,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     // MARK: - User interaction
 
+    // TODO: add a new function for configuring the view...
     @objc func pressedFavoritesItem() {
         self.title = States.favorites.rawValue
         self.navigationItem.leftBarButtonItem = leftBarButtonItem
@@ -185,9 +190,14 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     }
 
     func toggleFavorite(for ad: AdObject, checked: Bool) {
-        checked ? storage.add(ad) : storage.remove(ad)
+        do {
+            checked ? try storage.add(ad) : try storage.remove(ad)
+        } catch {
+            // Note: we should let user know the operation failed..
+        }
         // If the favorites are currently visible, reload immeditaley
         if isShowingFavorites {
+            // TODO: remove this reloadData...
             self.collectionView.reloadData()
         }
     }
@@ -213,11 +223,15 @@ extension AdsCollectionViewController: AdsDetailViewControllerDatasource, AdsDet
     // Delegate
 
     func pressedFavorite(for ad: AdObject, checked: Bool) {
-        guard checked else {
-            lastSelectedIndexPath = nil /// Handle internal inconcistentcy
-            storage.remove(ad)
-            return
+        do {
+            guard checked else {
+                lastSelectedIndexPath = nil /// Handle internal inconcistentcy
+                try storage.remove(ad)
+                return
+            }
+            try storage.add(ad)
+        } catch {
+            // Note: let user know op failed
         }
-        storage.add(ad)
     }
 }

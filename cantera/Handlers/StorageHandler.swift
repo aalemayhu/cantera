@@ -19,31 +19,23 @@ class StorageHandler {
 
     // MARK: - Private
 
-    private func persist (ads: [AdObject]) {
+    private func persist (ads: [AdObject]) throws {
         let encoder = JSONEncoder()
-        do {
-            let data = try encoder.encode(ads)
-            try data.write(to: persistedFileURL, options: .atomic)
-        } catch {
-            fatalError(error.localizedDescription)
-        }
+        let data = try encoder.encode(ads)
+        try data.write(to: persistedFileURL, options: .atomic)
     }
 
-    private func savedAds() -> [AdObject]? {
-        do {
-            let data = try Data(contentsOf: persistedFileURL)
-            let ads = try JSONDecoder().decode([AdObject].self, from: data)
-            return ads
-        } catch {
-            return nil
-        }
+    private func savedAds() throws -> [AdObject]? {
+        let data = try Data(contentsOf: persistedFileURL)
+        let ads = try JSONDecoder().decode([AdObject].self, from: data)
+        return ads
     }
 
     // MARK: - Public
 
-    func loadFavorites() {
+    func loadFavorites() throws {
         // Note: we should not assume this is guranteed to work but instead throw exception on error
-        guard let ads = savedAds() else { return }
+        guard let ads = try savedAds() else { return }
         favoritedAds = ads
     }
 
@@ -53,18 +45,18 @@ class StorageHandler {
         } catch { }
     }
 
-    func add(_ ad: AdObject) {
+    func add(_ ad: AdObject) throws {
         let match = favoritedAds.filter { $0.id == ad.id }
         guard match.count == 0 else { return }
 
         favoritedAds.append(ad)
         // Note: this will trigger FS sycalls for every  change, should be optimized.
-        self.persist(ads: self.favoritedAds)
+        try self.persist(ads: self.favoritedAds)
     }
 
-    func remove(_ ad: AdObject) {
+    func remove(_ ad: AdObject) throws {
         favoritedAds.removeAll { $0.id == ad.id }
         // Note: this will trigger FS sycalls for every  change, should be optimized.
-        self.persist(ads: self.favoritedAds)
+        try self.persist(ads: self.favoritedAds)
     }
 }
