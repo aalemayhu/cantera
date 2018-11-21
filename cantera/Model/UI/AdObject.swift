@@ -14,7 +14,7 @@ class AdObject: Codable {
     public let location: String
     public let title: String
     public let imageURL: String
-
+    public let id: String?
     public var liked: Bool
 
     init(adResponse: AdResponse) {
@@ -23,5 +23,6 @@ class AdObject: Codable {
         self.title = adResponse.description
         self.imageURL = adResponse.image.url
         self.liked = false
+        self.id = adResponse.id
     }
 }
