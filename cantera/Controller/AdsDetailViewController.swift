@@ -23,7 +23,7 @@ class AdsDetailViewController: UIViewController {
     public var datasource: AdsDetailViewControllerDatasource?
     public var delegate: AdsDetailViewControllerDelegate?
 
-    private var api: RequestHandler?
+    private var currentAd: AdObject?
 
     private let imageView: UIImageView = {
         let image = UIImage(imageLiteralResourceName: "placeholder")
@@ -54,6 +54,11 @@ class AdsDetailViewController: UIViewController {
         return shareItem
     }()
 
+    private lazy var favouriteItem: UIBarButtonItem = {
+        let favouriteItem = UIBarButtonItem(customView: favoriteButton)
+        return favouriteItem
+    }()
+
     // MARK: - View lifecycle
 
     override func viewDidLoad() {
@@ -69,13 +74,15 @@ class AdsDetailViewController: UIViewController {
     // MARK: - Private
 
     private func setup() {
-        guard let ad = datasource?.adForDetailViewController() else { return }
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: favoriteButton), shareItem]
+        self.currentAd = datasource?.adForDetailViewController()
+        guard let currentAd = currentAd else { return }
+
+        navigationItem.rightBarButtonItems = [favouriteItem, shareItem]
         self.view.backgroundColor = .white
 
-       let attributedText = NSMutableAttributedString(string: ad.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
-        attributedText.append(NSAttributedString(string: "\n\n\(ad.title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
-        if let price = ad.price {
+       let attributedText = NSMutableAttributedString(string: currentAd.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+        attributedText.append(NSAttributedString(string: "\n\n\(currentAd.title)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]))
+        if let price = currentAd.price {
             attributedText.append(NSAttributedString(string: "\n\n\(price),-", attributes: [
                 NSAttributedString.Key.foregroundColor: UIColor.black,
                 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 22)
@@ -97,14 +104,14 @@ class AdsDetailViewController: UIViewController {
             descriptionTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
             ])
 
-        favoriteButton.isSelected = datasource?.isItinFavorites(ad: ad) ?? false
+        favoriteButton.isSelected = datasource?.isItinFavorites(ad: currentAd) ?? false
         favoriteButton.layer.cornerRadius = 6
         favoriteButton.layer.masksToBounds = true
         favoriteButton.addTarget(self, action: #selector(pressFavorite), for: .touchUpInside)
         favoriteButton.layer.borderColor = UIColor.blue.cgColor
         favoriteButton.layer.borderWidth = 0.5
 
-        datasource?.retrieveImage(for: ad, completion: { image in
+        datasource?.retrieveImage(for: currentAd, completion: { image in
             DispatchQueue.main.async {
                 self.imageView.image = image ?? UIImage(imageLiteralResourceName: "missing-image")
             }
@@ -114,15 +121,15 @@ class AdsDetailViewController: UIViewController {
     // MARK: - User interaction
 
     @objc func pressFavorite() {
-        guard let ad = datasource?.adForDetailViewController() else { return }
+        guard let currentAd = currentAd else { return }
         favoriteButton.isSelected = !favoriteButton.isSelected
-        delegate?.pressedFavorite(for: ad, checked: favoriteButton.isSelected)
+        delegate?.pressedFavorite(for: currentAd, checked: favoriteButton.isSelected)
     }
 
     @objc func pressShare() {
-        guard let ad = datasource?.adForDetailViewController() else { return }
+        guard let currentAd = currentAd else { return }
         var items = [Any]()
-        items.append(ad.title)
+        items.append(currentAd.title)
         if let image = imageView.image {
             items.append(image)
         }
