@@ -55,9 +55,9 @@
 		84EBC80421A594CB00D93392 /* LoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80321A594CB00D93392 /* LoadingIndicatorView.swift */; };
 		84EBC80521A5956300D93392 /* LoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80321A594CB00D93392 /* LoadingIndicatorView.swift */; };
 		84EBC80621A5956600D93392 /* LoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80321A594CB00D93392 /* LoadingIndicatorView.swift */; };
-		84EBC80821A5BF6200D93392 /* AdTypeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80721A5BF6200D93392 /* AdTypeResponse.swift */; };
-		84EBC80921A5BF8900D93392 /* AdTypeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80721A5BF6200D93392 /* AdTypeResponse.swift */; };
-		84EBC80A21A5BF8C00D93392 /* AdTypeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80721A5BF6200D93392 /* AdTypeResponse.swift */; };
+		84EBC80821A5BF6200D93392 /* AdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80721A5BF6200D93392 /* AdType.swift */; };
+		84EBC80921A5BF8900D93392 /* AdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80721A5BF6200D93392 /* AdType.swift */; };
+		84EBC80A21A5BF8C00D93392 /* AdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80721A5BF6200D93392 /* AdType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,7 +102,7 @@
 		84E6854F219C18500004A2FA /* RequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestHandler.swift; sourceTree = "<group>"; };
 		84E6855D219C22590004A2FA /* AdsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsResponse.swift; sourceTree = "<group>"; };
 		84EBC80321A594CB00D93392 /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
-		84EBC80721A5BF6200D93392 /* AdTypeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdTypeResponse.swift; sourceTree = "<group>"; };
+		84EBC80721A5BF6200D93392 /* AdType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +187,7 @@
 		84A18DFC219C0B4A00403C42 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				84EBC80721A5BF6200D93392 /* AdType.swift */,
 				84DDD349219C90ED00CDC4F0 /* UI */,
 				84DDD348219C90C200CDC4F0 /* Response */,
 			);
@@ -227,7 +228,6 @@
 				84A18E03219C10EE00403C42 /* PriceResponse.swift */,
 				84A18DFF219C0FE400403C42 /* AdResponse.swift */,
 				84A18E07219C124500403C42 /* ImageResponse.swift */,
-				84EBC80721A5BF6200D93392 /* AdTypeResponse.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -406,8 +406,8 @@
 				84DDD34B219C913E00CDC4F0 /* AdObject.swift in Sources */,
 				848933E7219CDB1B003728F3 /* StorageHandler.swift in Sources */,
 				84DDD345219C47EF00CDC4F0 /* Colors.swift in Sources */,
+				84EBC80821A5BF6200D93392 /* AdType.swift in Sources */,
 				8442CAC5219C082C006F8A30 /* AdsCollectionViewController.swift in Sources */,
-				84EBC80821A5BF6200D93392 /* AdTypeResponse.swift in Sources */,
 				84EBC80421A594CB00D93392 /* LoadingIndicatorView.swift in Sources */,
 				84A18E04219C10EE00403C42 /* PriceResponse.swift in Sources */,
 				84DDD340219C30AB00CDC4F0 /* AdViewCollectionViewCell.swift in Sources */,
@@ -423,7 +423,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84EBC80A21A5BF8C00D93392 /* AdTypeResponse.swift in Sources */,
+				84EBC80A21A5BF8C00D93392 /* AdType.swift in Sources */,
 				84EBC80521A5956300D93392 /* LoadingIndicatorView.swift in Sources */,
 				848933E8219CE05F003728F3 /* StorageHandler.swift in Sources */,
 				848933E4219CC520003728F3 /* String.swift in Sources */,
@@ -447,6 +447,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84EBC80921A5BF8900D93392 /* AdType.swift in Sources */,
 				84EBC80621A5956600D93392 /* LoadingIndicatorView.swift in Sources */,
 				848933E9219CE061003728F3 /* StorageHandler.swift in Sources */,
 				848933E2219CC49A003728F3 /* AdsDetailViewController.swift in Sources */,
@@ -455,7 +456,6 @@
 				84E68556219C1D020004A2FA /* AppDelegate.swift in Sources */,
 				84E68554219C1D020004A2FA /* AdsCollectionViewController.swift in Sources */,
 				84DDD346219C6B9B00CDC4F0 /* Colors.swift in Sources */,
-				84EBC80921A5BF8900D93392 /* AdTypeResponse.swift in Sources */,
 				848933E3219CC51E003728F3 /* String.swift in Sources */,
 				84E68557219C1D020004A2FA /* canteraTests.swift in Sources */,
 				84E68551219C1AEF0004A2FA /* RequestHandler.swift in Sources */,

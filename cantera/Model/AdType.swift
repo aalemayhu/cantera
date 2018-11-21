@@ -8,9 +8,11 @@
 
 import Foundation
 
-enum AdType: String, Codable {
+enum AdType: String, Codable, CaseIterable {
     case bap = "BAP"
     case car = "CAR"
     case job = "JOB"
     case realeastate = "REALESTATE"
+
+    // add capitalize function...
 }

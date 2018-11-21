@@ -15,6 +15,7 @@ public class AdObject: Codable {
     public let title: String
     public let imageURL: String
     public let id: String?
+    public let adType: String
 
     init(adResponse: AdResponse) {
         self.price = adResponse.price?.value
@@ -22,5 +23,6 @@ public class AdObject: Codable {
         self.title = adResponse.description
         self.imageURL = adResponse.image.url
         self.id = adResponse.id
+        self.adType = adResponse.adType.rawValue
     }
 }
