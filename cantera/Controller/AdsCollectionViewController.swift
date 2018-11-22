@@ -43,7 +43,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     let emptyFavoritesView = EmptyFavoritesView()
 
-
     // MARK: - View lifecycle
 
     override func viewDidLoad() {
@@ -192,7 +191,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         let liked = storage.favoritedAds.contains(where: { $0.id == ad.id})
         adCell.delegate = self
         adCell.configure(for: ad, image: self.placeHolderImage, liked: liked)
-        
+
         api.image(for: ad, completion: { image in
             DispatchQueue.main.async {
                 adCell.configure(for: ad, image: image ?? self.placeHolderImage, liked: liked)
