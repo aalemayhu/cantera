@@ -15,7 +15,7 @@ protocol AdViewCollectionViewCellDelegate {
 class AdViewCollectionViewCell: UICollectionViewCell {
 
     static let ReuseIdentifier = "AdCell"
-    public var ad: AdObject? {
+    private var ad: AdObject? {
         didSet {
             guard let ad = ad else { return }
             // There is no guratenee that price is set
@@ -33,7 +33,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public var liked: Bool? {
+    private var liked: Bool? {
         didSet {
             guard let liked = liked else { return }
             favoriteButton.isSelected = liked
@@ -42,7 +42,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
 
     public var delegate: AdViewCollectionViewCellDelegate?
 
-    public let imageView: UIImageView = {
+    private let imageView: UIImageView = {
         let image = UIImage(imageLiteralResourceName: "placeholder")
         let imageView = UIImageView(image: image)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -90,6 +90,14 @@ class AdViewCollectionViewCell: UICollectionViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Public
+
+    public func configure(for ad: AdObject, image: UIImage, liked: Bool) {
+        self.ad = ad
+        self.imageView.image = image
+        self.liked = liked
     }
 
     // MARK: - Private

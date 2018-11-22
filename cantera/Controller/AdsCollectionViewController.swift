@@ -22,6 +22,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     private var lastSelectedIndexPath: IndexPath?
 
     private let placeHolderImage = UIImage(imageLiteralResourceName: "placeholder")
+    private let missingImage = UIImage(imageLiteralResourceName: "missing-image")
 
     private lazy var leftBarButtonItem: UIBarButtonItem = {
         let item = UIBarButtonItem(title: States.all.rawValue, style: .plain, target: self, action: #selector(pressedBackItem))
@@ -164,19 +165,10 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     // Note: This function should not be here, refactor and move it into AdViewCollectionViewCell.
     private func configure(for cell: AdViewCollectionViewCell?, with indexPath: IndexPath) {
         guard let cell = cell else { return }
-
         let ad = self.ad(for: indexPath.item)
-        cell.ad = ad
-
-        api.image(for: ad, completion: { image in
-            DispatchQueue.main.async {
-                cell.imageView.image = image ?? UIImage(imageLiteralResourceName: "missing-image")
-            }
-        })
-
-        cell.liked = storage.favoritedAds.contains(where: { $0.id == ad.id})
-        cell.imageView.image = self.placeHolderImage
+        let liked = storage.favoritedAds.contains(where: { $0.id == ad.id})
         cell.delegate = self
+        cell.configure(for: ad, image: self.placeHolderImage, liked: liked)
     }
 
     // MARK: - UICollectionView delegate and datasource
@@ -194,7 +186,18 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier, for: indexPath)
-        configure(for: cell as? AdViewCollectionViewCell, with: indexPath)
+        guard let adCell = cell as? AdViewCollectionViewCell else { return cell }
+
+        let ad = self.ad(for: indexPath.item)
+        let liked = storage.favoritedAds.contains(where: { $0.id == ad.id})
+        adCell.delegate = self
+        adCell.configure(for: ad, image: self.placeHolderImage, liked: liked)
+        
+        api.image(for: ad, completion: { image in
+            DispatchQueue.main.async {
+                adCell.configure(for: ad, image: image ?? self.placeHolderImage, liked: liked)
+            }
+        })
         return cell
     }
 
