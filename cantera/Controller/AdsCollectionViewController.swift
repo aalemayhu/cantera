@@ -117,16 +117,19 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         guard !isShowingFavorites else {
             return storage.favoritedAds[item]
         }
-        return api.allAds[item]
+        return storage.allAds[item]
     }
 
     private func loadRemoteAds() {
         indicatorView.animates = true
-        api.fetch { (count) in
-            guard count > 0 else {
+        api.fetch { (response) in
+            guard response.count > 0 else {
                 self.indicatorView.animates = false
                 return
             }
+
+            // Note: use diffing scheme and let UICollectionView perform animation
+            self.storage.use(response)
             self.collectionView.reloadData()
             self.indicatorView.animates = false
         }
@@ -140,7 +143,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             navigationItem.leftBarButtonItem = nil
             title = States.all.rawValue
 
-            guard api.allAds.count > 0 else {
+            guard storage.allAds.count > 0 else {
                 loadRemoteAds()
                 return
             }
@@ -169,7 +172,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         guard !isShowingFavorites else {
             return storage.favoritedAds.count
         }
-        return api.allAds.count
+        return storage.allAds.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -220,7 +223,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
                 configure(for: .emptyFavorites)
             }
         } else {
-            item = api.allAds.firstIndex(where: { $0.id == ad.id })
+            item = storage.allAds.firstIndex(where: { $0.id == ad.id })
         }
 
         // Try to only reload the item that changed

@@ -34,8 +34,6 @@ class RequestHandler {
         }
     }
 
-    public var allAds = [AdObject]()
-
     // MARK: - Private
 
     private func downloadImage(id: String, completion completionHandler: @escaping (UIImage?) -> Void) {
@@ -58,7 +56,7 @@ class RequestHandler {
 
     // MARK: - Public
 
-    public func fetch(completion completionHandler: @escaping (Int) -> Void) {
+    public func fetch(completion completionHandler: @escaping ([AdObject]) -> Void) {
         guard let url = Endpoints.json.url() else { return }
 
         URLSession.shared.dataTask(with: url) { (data, _, _) in
@@ -70,10 +68,8 @@ class RequestHandler {
                     // Drop all of the ads that are missing the price
                     ads.removeAll { $0.price == nil }
                 } catch {}
-                // Note: this is temporary will be replaced when ads are moved to the storage handler
-                self.allAds = ads
                 DispatchQueue.main.async {
-                    completionHandler(ads.count)
+                    completionHandler(ads)
                 }
             }
             }.resume()

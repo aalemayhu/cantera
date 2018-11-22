@@ -16,6 +16,7 @@ class StorageHandler {
     }()
 
     private(set) var favoritedAds = [AdObject]()
+    private(set) var allAds = [AdObject]()
 
     // MARK: - Private
 
@@ -33,19 +34,24 @@ class StorageHandler {
 
     // MARK: - Public
 
-    func loadFavorites() throws {
+    public func loadFavorites() throws {
         // Note: we should not assume this is guranteed to work but instead throw exception on error
         guard let ads = try savedAds() else { return }
         favoritedAds = ads
     }
 
-    func purge() {
+    // Note: not a great name, pick a different one.
+    public func use(_ ads: [AdObject]) {
+        allAds = ads
+    }
+
+    public func purge() {
         do {
             try FileManager.default.removeItem(at: persistedFileURL)
         } catch { }
     }
 
-    func add(_ ad: AdObject) throws {
+    public func add(_ ad: AdObject) throws {
         let match = favoritedAds.filter { $0.id == ad.id }
         guard match.count == 0 else { return }
 
@@ -54,7 +60,7 @@ class StorageHandler {
         try self.persist(ads: self.favoritedAds)
     }
 
-    func remove(_ ad: AdObject) throws {
+   public func remove(_ ad: AdObject) throws {
         favoritedAds.removeAll { $0.id == ad.id }
         // Note: this will trigger FS sycalls for every  change, should be optimized.
         try self.persist(ads: self.favoritedAds)
