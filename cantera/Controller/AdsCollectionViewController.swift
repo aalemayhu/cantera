@@ -161,15 +161,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         }
     }
 
-    // Note: This function should not be here, refactor and move it into AdViewCollectionViewCell.
-    private func configure(for cell: AdViewCollectionViewCell?, with indexPath: IndexPath) {
-        guard let cell = cell else { return }
-        let ad = self.ad(for: indexPath.item)
-        let liked = storage.favoritedAds.contains(where: { $0.id == ad.id})
-        cell.delegate = self
-        cell.configure(for: ad, image: self.placeHolderImage, liked: liked)
-    }
-
     // MARK: - UICollectionView delegate and datasource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
