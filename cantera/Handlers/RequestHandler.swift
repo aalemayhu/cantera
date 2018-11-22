@@ -63,25 +63,34 @@ class RequestHandler {
 
         URLSession.shared.dataTask(with: url) { (data, _, _) in
             if let data = data {
+                var ads = [AdObject]()
                 do {
                     let adsResponse =  try JSONDecoder().decode(AdsResponse.self, from: data)
-                    self.allAds = adsResponse.items.map { AdObject(adResponse: $0) }
+                    ads = adsResponse.items.map { AdObject(adResponse: $0) }
                     // Drop all of the ads that are missing the price
-                    self.allAds.removeAll { $0.price == nil }
-                    completionHandler(self.allAds.count)
-                } catch {
-                    completionHandler(0)
+                    ads.removeAll { $0.price == nil }
+                } catch {}
+                // Note: this is temporary will be replaced when ads are moved to the storage handler
+                self.allAds = ads
+                DispatchQueue.main.async {
+                    completionHandler(ads.count)
                 }
             }
             }.resume()
     }
 
     public func image(for ad: AdObject, completion completionHandler: @escaping (UIImage?) -> Void) {
+        let callback: (UIImage?) -> Void = { image in
+            DispatchQueue.main.async {
+                completionHandler(image)
+            }
+        }
+
         if let image = cache.object(forKey: ad.imageURL as AnyObject) as? UIImage {
-            completionHandler(image)
+            callback(image)
         } else {
             downloadImage(id: ad.imageURL) { (image) in
-                completionHandler(image)
+                callback(image)
             }
         }
     }

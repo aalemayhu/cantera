@@ -122,15 +122,13 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     private func loadRemoteAds() {
         indicatorView.animates = true
-        api.fetch { (response) in
-            DispatchQueue.main.async {
-                guard response > 0 else {
-                    self.indicatorView.animates = false
-                    return
-                }
-                self.collectionView.reloadData()
+        api.fetch { (count) in
+            guard count > 0 else {
                 self.indicatorView.animates = false
+                return
             }
+            self.collectionView.reloadData()
+            self.indicatorView.animates = false
         }
     }
 
@@ -184,9 +182,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         adCell.configure(for: ad, image: self.placeHolderImage, liked: liked)
 
         api.image(for: ad, completion: { image in
-            DispatchQueue.main.async {
-                adCell.configure(for: ad, image: image ?? self.placeHolderImage, liked: liked)
-            }
+            adCell.configure(for: ad, image: image ?? self.placeHolderImage, liked: liked)
         })
         return cell
     }

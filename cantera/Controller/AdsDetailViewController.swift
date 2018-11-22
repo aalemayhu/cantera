@@ -112,9 +112,7 @@ class AdsDetailViewController: UIViewController {
         favoriteButton.layer.borderWidth = 0.5
 
         datasource?.retrieveImage(for: currentAd, completion: { image in
-            DispatchQueue.main.async {
-                self.imageView.image = image ?? UIImage(imageLiteralResourceName: "missing-image")
-            }
+            self.imageView.image = image ?? UIImage(imageLiteralResourceName: "missing-image")
         })
     }
 
