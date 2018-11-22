@@ -36,6 +36,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     }()
 
     private let indicatorView = LoadingIndicatorView()
+    private var adsToDisplay = [AdObject]()
 
     private var isShowingFavorites: Bool {
         return States.favorites.rawValue == self.title
@@ -113,13 +114,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         }
     }
 
-    private func ad(for item: Int) -> AdObject {
-        guard !isShowingFavorites else {
-            return storage.favoritedAds[item]
-        }
-        return storage.allAds[item]
-    }
-
     private func loadRemoteAds() {
         indicatorView.animates = true
         api.fetch { (response) in
@@ -128,9 +122,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
                 return
             }
 
-            // Note: use diffing scheme and let UICollectionView perform animation
             self.storage.use(response)
-            self.collectionView.reloadData()
+            self.updateCollectionView(for: .all)
             self.indicatorView.animates = false
         }
     }
@@ -147,39 +140,80 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
                 loadRemoteAds()
                 return
             }
-            collectionView.reloadData()
+            updateCollectionView(for: state)
         case .favorites:
             navigationItem.rightBarButtonItem = allAdsItem
-            title = States.favorites.rawValue
-            collectionView.reloadData()
 
             // No favorites on initial configuring, fallback to empty
             if storage.favoritedAds.isEmpty {
                 fallthrough
+            } else if title != States.favorites.rawValue {
+                updateCollectionView(for: .favorites)
             }
+            title = States.favorites.rawValue
+
         case .emptyFavorites:
             emptyFavoritesView.isHidden = false
         }
     }
 
+    func updateCollectionView(for state: States) {
+        var target: [AdObject], source: [AdObject]
+
+        if state == .all {
+            target = storage.allAds
+            source = storage.favoritedAds
+        } else {
+            target = storage.favoritedAds
+            source = storage.allAds
+        }
+
+        // Initially there won't be a properly configured datasource collection
+        guard !adsToDisplay.isEmpty else {
+            adsToDisplay += target
+            collectionView.reloadData()
+            return
+        }
+
+        let toDeleteItems: [IndexPath?] =  source.enumerated().map { (index, element) in
+            var indexPath: IndexPath?
+            if !target.contains(where: { $0.id == element.id }) {
+                adsToDisplay.removeAll(where: { $0.id == element.id })
+                indexPath = IndexPath(item: index, section: 0)
+            }
+            return indexPath
+        }
+
+        let toAddItems: [IndexPath?] = target.enumerated().map { (index, element) in
+            var indexPath: IndexPath?
+            if !adsToDisplay.contains(where: { $0.id == element.id }) {
+                adsToDisplay.append(element)
+                indexPath = IndexPath(item: index, section: 0)
+            }
+            return indexPath
+        }
+
+        collectionView.performBatchUpdates({
+            collectionView.deleteItems(at: toDeleteItems.compactMap({ $0 }))
+            collectionView.insertItems(at: toAddItems.compactMap({ $0 }))
+        }, completion: nil)
+    }
+
     // MARK: - UICollectionView delegate and datasource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return !isShowingFavorites ? AdType.allCases.count : 1
+        return 1
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard !isShowingFavorites else {
-            return storage.favoritedAds.count
-        }
-        return storage.allAds.count
+        return adsToDisplay.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier, for: indexPath)
         guard let adCell = cell as? AdViewCollectionViewCell else { return cell }
 
-        let ad = self.ad(for: indexPath.item)
+        let ad = adsToDisplay[indexPath.item]
         let liked = storage.favoritedAds.contains(where: { $0.id == ad.id})
         adCell.delegate = self
         adCell.configure(for: ad, image: self.placeHolderImage, liked: liked)
@@ -230,7 +264,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         if let item = item {
             collectionView.reloadItems(at: [IndexPath(item: item, section: 0)])
         } else {
-            self.collectionView.reloadData()
+            let state = isShowingFavorites ? States.favorites : States.all
+            self.updateCollectionView(for: state)
         }
     }
 }
@@ -249,7 +284,7 @@ extension AdsCollectionViewController: AdsDetailViewControllerDatasource, AdsDet
 
     func adForDetailViewController() -> AdObject? {
         guard let indexPath = self.lastSelectedIndexPath else { return nil }
-        return ad(for: indexPath.item)
+        return adsToDisplay[indexPath.item]
     }
 
     // Delegate
