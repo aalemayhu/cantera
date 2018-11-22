@@ -24,12 +24,12 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     private let placeHolderImage = UIImage(imageLiteralResourceName: "placeholder")
     private let missingImage = UIImage(imageLiteralResourceName: "missing-image")
 
-    private lazy var leftBarButtonItem: UIBarButtonItem = {
+    private lazy var allAdsItem: UIBarButtonItem = {
         let item = UIBarButtonItem(title: States.all.rawValue, style: .plain, target: self, action: #selector(pressedBackItem))
         return item
     }()
 
-    private lazy var rightBarButtonItem: UIBarButtonItem = {
+    private lazy var favouritesItem: UIBarButtonItem = {
         let rightBarButtonItem = UIBarButtonItem(title: "Favoritter", style: .plain, target: self, action: #selector(pressedFavoritesItem))
         rightBarButtonItem.tintColor = UIColor.red
         return rightBarButtonItem
@@ -80,8 +80,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         collectionView.register(AdViewCollectionViewCell.self, forCellWithReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.contentInsetAdjustmentBehavior = .always
+        navigationItem.rightBarButtonItem = allAdsItem
         collectionView.backgroundColor = .white
-        navigationItem.rightBarButtonItem = rightBarButtonItem
         title = States.all.rawValue
 
         NSLayoutConstraint.activate([
@@ -140,7 +140,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
         switch state {
         case .all:
-            navigationItem.leftBarButtonItem = nil
+            navigationItem.rightBarButtonItem = favouritesItem
             title = States.all.rawValue
 
             guard storage.allAds.count > 0 else {
@@ -149,7 +149,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             }
             collectionView.reloadData()
         case .favorites:
-            navigationItem.leftBarButtonItem = leftBarButtonItem
+            navigationItem.rightBarButtonItem = allAdsItem
             title = States.favorites.rawValue
             collectionView.reloadData()
 
