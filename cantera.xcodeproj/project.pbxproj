@@ -58,6 +58,9 @@
 		84EBC80821A5BF6200D93392 /* AdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80721A5BF6200D93392 /* AdType.swift */; };
 		84EBC80921A5BF8900D93392 /* AdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80721A5BF6200D93392 /* AdType.swift */; };
 		84EBC80A21A5BF8C00D93392 /* AdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80721A5BF6200D93392 /* AdType.swift */; };
+		84EBC80C21A5D9A300D93392 /* EmptyFavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80B21A5D9A300D93392 /* EmptyFavoritesView.swift */; };
+		84EBC80D21A5DA6100D93392 /* EmptyFavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80B21A5D9A300D93392 /* EmptyFavoritesView.swift */; };
+		84EBC80E21A5DA6300D93392 /* EmptyFavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBC80B21A5D9A300D93392 /* EmptyFavoritesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +106,7 @@
 		84E6855D219C22590004A2FA /* AdsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsResponse.swift; sourceTree = "<group>"; };
 		84EBC80321A594CB00D93392 /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
 		84EBC80721A5BF6200D93392 /* AdType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdType.swift; sourceTree = "<group>"; };
+		84EBC80B21A5D9A300D93392 /* EmptyFavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyFavoritesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +203,7 @@
 			children = (
 				84DDD33F219C30AB00CDC4F0 /* AdViewCollectionViewCell.swift */,
 				84EBC80321A594CB00D93392 /* LoadingIndicatorView.swift */,
+				84EBC80B21A5D9A300D93392 /* EmptyFavoritesView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -401,6 +406,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84EBC80C21A5D9A300D93392 /* EmptyFavoritesView.swift in Sources */,
 				84E68550219C18500004A2FA /* RequestHandler.swift in Sources */,
 				848933E0219CC1A2003728F3 /* String.swift in Sources */,
 				84DDD34B219C913E00CDC4F0 /* AdObject.swift in Sources */,
@@ -423,6 +429,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84EBC80E21A5DA6300D93392 /* EmptyFavoritesView.swift in Sources */,
 				84EBC80A21A5BF8C00D93392 /* AdType.swift in Sources */,
 				84EBC80521A5956300D93392 /* LoadingIndicatorView.swift in Sources */,
 				848933E8219CE05F003728F3 /* StorageHandler.swift in Sources */,
@@ -447,6 +454,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84EBC80D21A5DA6100D93392 /* EmptyFavoritesView.swift in Sources */,
 				84EBC80921A5BF8900D93392 /* AdType.swift in Sources */,
 				84EBC80621A5956600D93392 /* LoadingIndicatorView.swift in Sources */,
 				848933E9219CE061003728F3 /* StorageHandler.swift in Sources */,

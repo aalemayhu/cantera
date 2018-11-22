@@ -13,6 +13,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     enum States: String {
         case all = "Annonser"
         case favorites = "Favoritter"
+        case emptyFavorites = "Tomt"
     }
 
     private let storage = StorageHandler()
@@ -39,11 +40,14 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         return States.favorites.rawValue == self.title
     }
 
+    let emptyFavoritesView = EmptyFavoritesView()
+
+
     // MARK: - View lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(indicatorView)
+        [indicatorView, emptyFavoritesView].forEach { self.view.addSubview($0) }
         setup()
     }
 
@@ -77,7 +81,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.contentInsetAdjustmentBehavior = .always
         collectionView.backgroundColor = .white
-
         navigationItem.rightBarButtonItem = rightBarButtonItem
         title = States.all.rawValue
 
@@ -88,17 +91,24 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             indicatorView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1)
             ])
 
+        NSLayoutConstraint.activate([
+            emptyFavoritesView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyFavoritesView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyFavoritesView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 1),
+            emptyFavoritesView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 1)
+            ])
+
         api.cacheLimit = 50
         do {
             try storage.loadFavorites()
-            pressedFavoritesItem()
+            configure(for: .favorites)
         } catch {
             // Note: Still not sure what todo when this fails...
         }
 
         // If we have favorites, start there
         guard !storage.favoritedAds.isEmpty else {
-            loadRemoteAds()
+            configure(for: .all)
             return
         }
     }
@@ -124,6 +134,34 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         }
     }
 
+    private func configure(for state: States) {
+        emptyFavoritesView.isHidden = true
+
+        switch state {
+        case .all:
+            navigationItem.leftBarButtonItem = nil
+            title = States.all.rawValue
+
+            guard api.allAds.count > 0 else {
+                loadRemoteAds()
+                return
+            }
+            collectionView.reloadData()
+        case .favorites:
+            navigationItem.leftBarButtonItem = leftBarButtonItem
+            title = States.favorites.rawValue
+            collectionView.reloadData()
+
+            // No favorites on initial configuring, fallback to empty
+            if storage.favoritedAds.isEmpty {
+                fallthrough
+            }
+        case .emptyFavorites:
+            emptyFavoritesView.isHidden = false
+        }
+    }
+
+    // Note: This function should not be here, refactor and move it into AdViewCollectionViewCell.
     private func configure(for cell: AdViewCollectionViewCell?, with indexPath: IndexPath) {
         guard let cell = cell else { return }
 
@@ -171,22 +209,12 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     // MARK: - User interaction
 
-    // TODO: add a new function for configuring the view...
     @objc func pressedFavoritesItem() {
-        self.title = States.favorites.rawValue
-        self.navigationItem.leftBarButtonItem = leftBarButtonItem
-        self.collectionView.reloadData()
+        configure(for: .favorites)
     }
 
     @objc func pressedBackItem() {
-        self.title = States.all.rawValue
-        self.navigationItem.leftBarButtonItem = nil
-
-        guard api.allAds.count > 0 else {
-            loadRemoteAds()
-            return
-        }
-        self.collectionView.reloadData()
+        configure(for: .all)
     }
 
     func toggleFavorite(for ad: AdObject, checked: Bool) {
@@ -195,9 +223,21 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         } catch {
             // Note: we should let user know the operation failed..
         }
-        // If the favorites are currently visible, reload immeditaley
+
+        var item: Int?
         if isShowingFavorites {
-            // TODO: remove this reloadData...
+            item = storage.favoritedAds.firstIndex(where: { $0.id == ad.id })
+            if storage.favoritedAds.isEmpty {
+                configure(for: .emptyFavorites)
+            }
+        } else {
+            item = api.allAds.firstIndex(where: { $0.id == ad.id })
+        }
+
+        // Try to only reload the item that changed
+        if let item = item {
+            collectionView.reloadItems(at: [IndexPath(item: item, section: 0)])
+        } else {
             self.collectionView.reloadData()
         }
     }
