@@ -48,10 +48,7 @@ class AdsDetailViewController: UIViewController {
 
     private lazy var favoriteButton = FavoriteButton(delegate: self)
     private lazy var favoriteItem: UIBarButtonItem = {
-        let favoriteItem = UIBarButtonItem(customView: favoriteButton)
-        favoriteButton.layer.borderColor = UIColor.blue.cgColor
-        favoriteButton.layer.borderWidth = 0.5
-        return favoriteItem
+        return UIBarButtonItem(customView: favoriteButton)
     }()
 
     // MARK: - View lifecycle
