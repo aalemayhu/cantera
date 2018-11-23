@@ -30,10 +30,6 @@ stronger colour for the favorite icon. I incorporated his feedback.
 
 ## Potential improvements
 
-There is some copy / pasta in between the view controllers. Would have been
-nice to plan out better and create separate view component classes that could
-be reused across them f. ex. the favourite button.
-
 Error states are not being handled at all. They should be addressed gracefully
 with sane default behaviour. I feel like the ads view controller could have
 been done much better, getting it to support dynamic attributed text was harder
@@ -41,11 +37,8 @@ than I thought it would be using Auto Layout.
 
 ## If I had more time what would I want to do
 
-It would have been awesome if I had gotten around to making some animations. Like
-these ones:
-
-- Transitions between view controllers.
-- User toggles the favourite button.
+It would have been awesome if I had gotten around to making some animations.
+Like f. ex.  user toggles the favourite button.
 
 It would have been cool to show different views based on the `ad-type`, maybe
 icons like FINN does?  I tried hard to avoid adding any third party dependency,
