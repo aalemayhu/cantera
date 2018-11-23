@@ -155,7 +155,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         }
     }
 
-    func updateCollectionView(from: [AdObject], to: [AdObject]) {
+    private func updateCollectionView(from: [AdObject], to: [AdObject]) {
         // Initially there won't be a properly configured datasource collection
         guard !adsToDisplay.isEmpty else {
             adsToDisplay += to
