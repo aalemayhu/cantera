@@ -29,7 +29,6 @@ class FavoriteButton: UIButton {
         setImage(UIImage(imageLiteralResourceName: "unselected"), for: .normal)
         setImage(UIImage(imageLiteralResourceName: "selected"), for: .selected)
         translatesAutoresizingMaskIntoConstraints = false
-        layer.maskedCorners = [.layerMinXMaxYCorner]
         layer.masksToBounds = true
         layer.cornerRadius = 6
     }

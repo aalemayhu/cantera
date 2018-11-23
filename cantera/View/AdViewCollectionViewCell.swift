@@ -76,6 +76,7 @@ class AdViewCollectionViewCell: UICollectionViewCell {
 
     private lazy var favoriteButton: FavoriteButton = {
         let favoriteButton = FavoriteButton(delegate: self)
+        favoriteButton.layer.maskedCorners = [.layerMinXMaxYCorner]
         return favoriteButton
     }()
 
