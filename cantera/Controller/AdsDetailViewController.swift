@@ -41,22 +41,17 @@ class AdsDetailViewController: UIViewController {
         return textView
     }()
 
-    private let favoriteButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setImage(UIImage(imageLiteralResourceName: "unselected"), for: .normal)
-        button.setImage(UIImage(imageLiteralResourceName: "selected"), for: .selected)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-
     private lazy var shareItem: UIBarButtonItem = {
         let shareItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(pressShare))
         return shareItem
     }()
 
-    private lazy var favouriteItem: UIBarButtonItem = {
-        let favouriteItem = UIBarButtonItem(customView: favoriteButton)
-        return favouriteItem
+    private lazy var favoriteButton = FavoriteButton(delegate: self)
+    private lazy var favoriteItem: UIBarButtonItem = {
+        let favoriteItem = UIBarButtonItem(customView: favoriteButton)
+        favoriteButton.layer.borderColor = UIColor.blue.cgColor
+        favoriteButton.layer.borderWidth = 0.5
+        return favoriteItem
     }()
 
     // MARK: - View lifecycle
@@ -77,7 +72,7 @@ class AdsDetailViewController: UIViewController {
         self.currentAd = datasource?.adForDetailViewController()
         guard let currentAd = currentAd else { return }
 
-        navigationItem.rightBarButtonItems = [favouriteItem, shareItem]
+        navigationItem.rightBarButtonItems = [favoriteItem, shareItem]
         self.view.backgroundColor = .white
 
        let attributedText = NSMutableAttributedString(string: currentAd.location, attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
@@ -105,11 +100,6 @@ class AdsDetailViewController: UIViewController {
             ])
 
         favoriteButton.isSelected = datasource?.isItinFavorites(ad: currentAd) ?? false
-        favoriteButton.layer.cornerRadius = 6
-        favoriteButton.layer.masksToBounds = true
-        favoriteButton.addTarget(self, action: #selector(pressFavorite), for: .touchUpInside)
-        favoriteButton.layer.borderColor = UIColor.blue.cgColor
-        favoriteButton.layer.borderWidth = 0.5
 
         datasource?.retrieveImage(for: currentAd, completion: { image in
             self.imageView.image = image ?? UIImage(imageLiteralResourceName: "missing-image")
@@ -134,5 +124,11 @@ class AdsDetailViewController: UIViewController {
         let shareViewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
         shareViewController.popoverPresentationController?.sourceRect = shareItem.accessibilityFrame
         self.present(shareViewController, animated: true, completion: nil)
+    }
+}
+
+extension AdsDetailViewController: FavoriteButtonDelegate {
+    func selectorForPressedFavorite() -> Selector {
+        return #selector(pressFavorite)
     }
 }

@@ -29,7 +29,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         return item
     }()
 
-    private lazy var favouritesItem: UIBarButtonItem = {
+    private lazy var favoritesItem: UIBarButtonItem = {
         let rightBarButtonItem = UIBarButtonItem(title: "Favoritter", style: .plain, target: self, action: #selector(pressedFavoritesItem))
         rightBarButtonItem.tintColor = UIColor.red
         return rightBarButtonItem
@@ -133,7 +133,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
         switch state {
         case .all:
-            navigationItem.rightBarButtonItem = favouritesItem
+            navigationItem.rightBarButtonItem = favoritesItem
             title = States.all.rawValue
 
             guard storage.allAds.count > 0 else {

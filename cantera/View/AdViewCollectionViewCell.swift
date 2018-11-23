@@ -74,12 +74,9 @@ class AdViewCollectionViewCell: UICollectionViewCell {
         return textView
     }()
 
-    private let favoriteButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setImage(UIImage(imageLiteralResourceName: "unselected"), for: .normal)
-        button.setImage(UIImage(imageLiteralResourceName: "selected"), for: .selected)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private lazy var favoriteButton: FavoriteButton = {
+        let favoriteButton = FavoriteButton(delegate: self)
+        return favoriteButton
     }()
 
     override init(frame: CGRect) {
@@ -138,11 +135,6 @@ class AdViewCollectionViewCell: UICollectionViewCell {
 
         self.layer.cornerRadius = 6
         self.layer.masksToBounds = true
-
-        favoriteButton.layer.cornerRadius = 6
-        favoriteButton.layer.masksToBounds = true
-        favoriteButton.layer.maskedCorners = [.layerMinXMaxYCorner]
-        favoriteButton.addTarget(self, action: #selector(pressFavorite), for: .touchUpInside)
     }
 
     // MARK: - User interaction
@@ -151,5 +143,11 @@ class AdViewCollectionViewCell: UICollectionViewCell {
         guard let ad = self.ad else { return }
         self.favoriteButton.isSelected = !self.favoriteButton.isSelected
         self.delegate?.toggleFavorite(for: ad, checked: self.favoriteButton.isSelected)
+    }
+}
+
+extension AdViewCollectionViewCell: FavoriteButtonDelegate {
+    func selectorForPressedFavorite() -> Selector {
+        return #selector(pressFavorite)
     }
 }
