@@ -35,7 +35,6 @@ class StorageHandler {
     // MARK: - Public
 
     public func loadFavorites() throws {
-        // Note: we should not assume this is guranteed to work but instead throw exception on error
         guard let ads = try savedAds() else { return }
         favoritedAds = ads
     }
