@@ -123,7 +123,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             }
 
             self.storage.use(response)
-            self.updateCollectionView(for: .all)
+            self.updateCollectionView(from: self.storage.favoritedAds, to: self.storage.allAds)
             self.indicatorView.animates = false
         }
     }
@@ -140,51 +140,39 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
                 loadRemoteAds()
                 return
             }
-            updateCollectionView(for: state)
+            updateCollectionView(from: storage.favoritedAds, to: storage.allAds)
         case .favorites:
             navigationItem.rightBarButtonItem = allAdsItem
+            title = States.favorites.rawValue
 
             // No favorites on initial configuring, fallback to empty
             if storage.favoritedAds.isEmpty {
                 fallthrough
-            } else if title != States.favorites.rawValue {
-                updateCollectionView(for: .favorites)
             }
-            title = States.favorites.rawValue
-
+            updateCollectionView(from: storage.allAds, to: storage.favoritedAds)
         case .emptyFavorites:
             emptyFavoritesView.isHidden = false
         }
     }
 
-    func updateCollectionView(for state: States) {
-        var target: [AdObject], source: [AdObject]
-
-        if state == .all {
-            target = storage.allAds
-            source = storage.favoritedAds
-        } else {
-            target = storage.favoritedAds
-            source = storage.allAds
-        }
-
+    func updateCollectionView(from: [AdObject], to: [AdObject]) {
         // Initially there won't be a properly configured datasource collection
         guard !adsToDisplay.isEmpty else {
-            adsToDisplay += target
+            adsToDisplay += to
             collectionView.reloadData()
             return
         }
 
-        let toDeleteItems: [IndexPath?] =  source.enumerated().map { (index, element) in
+        let toDeleteItems: [IndexPath?] =  from.enumerated().map { (index, element) in
             var indexPath: IndexPath?
-            if !target.contains(where: { $0.id == element.id }) {
+            if !to.contains(where: { $0.id == element.id }) {
                 adsToDisplay.removeAll(where: { $0.id == element.id })
                 indexPath = IndexPath(item: index, section: 0)
             }
             return indexPath
         }
 
-        let toAddItems: [IndexPath?] = target.enumerated().map { (index, element) in
+        let toAddItems: [IndexPath?] = to.enumerated().map { (index, element) in
             var indexPath: IndexPath?
             if !adsToDisplay.contains(where: { $0.id == element.id }) {
                 adsToDisplay.append(element)
@@ -250,22 +238,14 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             // Note: we should let user know the operation failed..
         }
 
-        var item: Int?
-        if isShowingFavorites {
-            item = storage.favoritedAds.firstIndex(where: { $0.id == ad.id })
+        if isShowingFavorites, let item = storage.favoritedAds.firstIndex(where: { $0.id == ad.id }) {
             if storage.favoritedAds.isEmpty {
                 configure(for: .emptyFavorites)
+            } else {
+                collectionView.reloadItems(at: [IndexPath(item: item, section: 0)])
             }
-        } else {
-            item = storage.allAds.firstIndex(where: { $0.id == ad.id })
-        }
-
-        // Try to only reload the item that changed
-        if let item = item {
+        } else if let item = storage.allAds.firstIndex(where: { $0.id == ad.id }) {
             collectionView.reloadItems(at: [IndexPath(item: item, section: 0)])
-        } else {
-            let state = isShowingFavorites ? States.favorites : States.all
-            self.updateCollectionView(for: state)
         }
     }
 }
