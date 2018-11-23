@@ -144,12 +144,11 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         case .favorites:
             navigationItem.rightBarButtonItem = allAdsItem
             title = States.favorites.rawValue
-
+            updateCollectionView(from: storage.allAds, to: storage.favoritedAds)
             // No favorites on initial configuring, fallback to empty
             if storage.favoritedAds.isEmpty {
                 fallthrough
             }
-            updateCollectionView(from: storage.allAds, to: storage.favoritedAds)
         case .emptyFavorites:
             emptyFavoritesView.isHidden = false
         }
