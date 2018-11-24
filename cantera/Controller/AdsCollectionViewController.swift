@@ -174,7 +174,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         }
 
         collectionView.performBatchUpdates({
-            collectionView.deleteItems(at: toDeleteItems.compactMap({ $0 }))
+            collectionView.deleteItems(at: toDeleteItems.compactMap({ $0 }).reversed())
             collectionView.insertItems(at: toAddItems.compactMap({ $0 }))
         }, completion: nil)
     }
