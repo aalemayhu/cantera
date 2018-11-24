@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AdsCollectionViewController: UICollectionViewController, AdViewCollectionViewCellDelegate {
+class AdsCollectionViewController: UICollectionViewController {
 
     enum States: String {
         case all = "Annonser"
@@ -43,6 +43,14 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         favSwitch.onTintColor = .red
         favSwitch.addTarget(self, action: #selector(pressedSwitch), for: .valueChanged)
         return favSwitch
+    }()
+
+    private lazy var leftBarButtonItem: UIBarButtonItem = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(imageLiteralResourceName: "grid"), for: .normal)
+        button.setImage(UIImage(imageLiteralResourceName: "table"), for: .selected)
+        button.addTarget(self, action: #selector(pressedLayoutItem(_:)), for: .touchUpInside)
+        return UIBarButtonItem(customView: button)
     }()
 
     private let indicatorView = LoadingIndicatorView()
@@ -88,6 +96,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: favoritesSwitch)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.contentInsetAdjustmentBehavior = .always
+        navigationItem.leftBarButtonItem = leftBarButtonItem
         collectionView.backgroundColor = .white
         title = States.all.rawValue
 
@@ -232,22 +241,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         }
     }
 
-    func toggleFavorite(for ad: AdObject, checked: Bool) {
-        do {
-            checked ? try storage.add(ad) : try storage.remove(ad)
-        } catch {
-            // Note: we should let user know the operation failed..
-        }
-
-        if currentState == .favorites, let item = storage.favoritedAds.firstIndex(where: { $0.id == ad.id }) {
-            if storage.favoritedAds.isEmpty {
-                configure(for: .emptyFavorites)
-            } else {
-                collectionView.reloadItems(at: [IndexPath(item: item, section: 0)])
-            }
-        } else if let item = storage.allAds.firstIndex(where: { $0.id == ad.id }) {
-            collectionView.reloadItems(at: [IndexPath(item: item, section: 0)])
-        }
+    @objc func pressedLayoutItem(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
     }
 }
 
@@ -280,6 +275,26 @@ extension AdsCollectionViewController: AdsDetailViewControllerDatasource, AdsDet
             try storage.add(ad)
         } catch {
             // Note: let user know op failed
+        }
+    }
+}
+
+extension AdsCollectionViewController: AdViewCollectionViewCellDelegate {
+    func toggleFavorite(for ad: AdObject, checked: Bool) {
+        do {
+            checked ? try storage.add(ad) : try storage.remove(ad)
+        } catch {
+            // Note: we should let user know the operation failed..
+        }
+
+        if currentState == .favorites, let item = storage.favoritedAds.firstIndex(where: { $0.id == ad.id }) {
+            if storage.favoritedAds.isEmpty {
+                configure(for: .emptyFavorites)
+            } else {
+                collectionView.reloadItems(at: [IndexPath(item: item, section: 0)])
+            }
+        } else if let item = storage.allAds.firstIndex(where: { $0.id == ad.id }) {
+            collectionView.reloadItems(at: [IndexPath(item: item, section: 0)])
         }
     }
 }
