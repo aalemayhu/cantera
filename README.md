@@ -1,7 +1,5 @@
 # cantera
 
-![app-icon](./cantera/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png)
-
 A small app I am making for a technical challenge from FINN.no.
 
 ![gif](GitHub/vid.gif)
