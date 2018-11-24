@@ -16,6 +16,20 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         case emptyFavorites = "Tomt"
     }
 
+    private var currentState: States {
+        get {
+            guard let title = title else { return .emptyFavorites }
+            guard let state = States(rawValue: title) else { return .emptyFavorites }
+            return state
+        }
+        set {
+            // View being in empty favorites state should not affect the switch
+            guard newValue != .emptyFavorites else { return }
+            favoritesSwitch.isOn = newValue == .favorites
+            title = newValue.rawValue
+        }
+    }
+
     private let storage = StorageHandler()
     private let api = RequestHandler()
 
@@ -24,23 +38,15 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     private let placeHolderImage = UIImage(imageLiteralResourceName: "placeholder")
     private let missingImage = UIImage(imageLiteralResourceName: "missing-image")
 
-    private lazy var allAdsItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(title: States.all.rawValue, style: .plain, target: self, action: #selector(pressedBackItem))
-        return item
-    }()
-
-    private lazy var favoritesItem: UIBarButtonItem = {
-        let rightBarButtonItem = UIBarButtonItem(title: "Favoritter", style: .plain, target: self, action: #selector(pressedFavoritesItem))
-        rightBarButtonItem.tintColor = UIColor.red
-        return rightBarButtonItem
+    private lazy var favoritesSwitch: UISwitch = {
+        let favSwitch = UISwitch(frame: .zero)
+        favSwitch.onTintColor = .red
+        favSwitch.addTarget(self, action: #selector(pressedSwitch), for: .valueChanged)
+        return favSwitch
     }()
 
     private let indicatorView = LoadingIndicatorView()
     private var adsToDisplay = [AdObject]()
-
-    private var isShowingFavorites: Bool {
-        return States.favorites.rawValue == self.title
-    }
 
     let emptyFavoritesView = EmptyFavoritesView()
 
@@ -79,9 +85,9 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     private func setup() {
         collectionView.register(AdViewCollectionViewCell.self, forCellWithReuseIdentifier: AdViewCollectionViewCell.ReuseIdentifier)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: favoritesSwitch)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.contentInsetAdjustmentBehavior = .always
-        navigationItem.rightBarButtonItem = allAdsItem
         collectionView.backgroundColor = .white
         title = States.all.rawValue
 
@@ -128,22 +134,18 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         }
     }
 
-    private func configure(for state: States) {
+    private func configure(for newState: States) {
         emptyFavoritesView.isHidden = true
+        currentState = newState
 
-        switch state {
+        switch newState {
         case .all:
-            navigationItem.rightBarButtonItem = favoritesItem
-            title = States.all.rawValue
-
             guard storage.allAds.count > 0 else {
                 loadRemoteAds()
                 return
             }
             updateCollectionView(from: storage.favoritedAds, to: storage.allAds)
         case .favorites:
-            navigationItem.rightBarButtonItem = allAdsItem
-            title = States.favorites.rawValue
             updateCollectionView(from: storage.allAds, to: storage.favoritedAds)
             // No favorites on initial configuring, fallback to empty
             if storage.favoritedAds.isEmpty {
@@ -222,12 +224,12 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     // MARK: - User interaction
 
-    @objc func pressedFavoritesItem() {
-        configure(for: .favorites)
-    }
-
-    @objc func pressedBackItem() {
-        configure(for: .all)
+    @objc func pressedSwitch() {
+        if favoritesSwitch.isOn {
+            configure(for: .favorites)
+        } else {
+            configure(for: .all)
+        }
     }
 
     func toggleFavorite(for ad: AdObject, checked: Bool) {
@@ -237,7 +239,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             // Note: we should let user know the operation failed..
         }
 
-        if isShowingFavorites, let item = storage.favoritedAds.firstIndex(where: { $0.id == ad.id }) {
+        if currentState == .favorites, let item = storage.favoritedAds.firstIndex(where: { $0.id == ad.id }) {
             if storage.favoritedAds.isEmpty {
                 configure(for: .emptyFavorites)
             } else {
