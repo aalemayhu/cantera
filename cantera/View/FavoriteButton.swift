@@ -13,6 +13,7 @@ protocol FavoriteButtonDelegate {
 }
 
 class FavoriteButton: UIButton {
+
     init(delegate: FavoriteButtonDelegate) {
         super.init(frame: .zero)
         setup()

@@ -35,9 +35,6 @@ than I thought it would be using Auto Layout.
 
 ## If I had more time what would I want to do
 
-It would have been awesome if I had gotten around to making some animations.
-Like f. ex.  user toggles the favourite button.
-
 It would have been cool to show different views based on the `ad-type`, maybe
 icons like FINN does?  I tried hard to avoid adding any third party dependency,
 maybe that was a mistake?  I could have speed up things by pulling in something

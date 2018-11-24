@@ -13,7 +13,6 @@ protocol AdViewCollectionViewCellDelegate {
 }
 
 class AdViewCollectionViewCell: UICollectionViewCell {
-
     static let ReuseIdentifier = "AdCell"
     private var ad: AdObject? {
         didSet {
@@ -143,7 +142,15 @@ class AdViewCollectionViewCell: UICollectionViewCell {
     @objc func pressFavorite() {
         guard let ad = self.ad else { return }
         self.favoriteButton.isSelected = !self.favoriteButton.isSelected
-        self.delegate?.toggleFavorite(for: ad, checked: self.favoriteButton.isSelected)
+
+        favoriteButton.transform = CGAffineTransform(scaleX: 0, y: 0)
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0,
+                       options: [.curveEaseInOut],
+                       animations: {
+                        self.favoriteButton.transform = .identity
+        }, completion: { _ in
+            self.delegate?.toggleFavorite(for: ad, checked: self.favoriteButton.isSelected)
+        })
     }
 }
 
