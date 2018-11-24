@@ -61,15 +61,11 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        // This is not ideal, but by keeping track of the selected one
-        // we can update a single item instead of reloading the whole collection.
-        guard let selectedIndexPath = self.lastSelectedIndexPath else {
-            collectionView.reloadData()
-            return
+        if let selectedIndexPath = self.lastSelectedIndexPath {
+            collectionView.reloadItems(at: [selectedIndexPath])
+            self.lastSelectedIndexPath = nil
         }
-        collectionView.reloadItems(at: [selectedIndexPath])
-        self.lastSelectedIndexPath = nil
-    }
+      }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         self.collectionViewLayout.invalidateLayout()
@@ -108,6 +104,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         api.cacheLimit = 50
         do {
             try storage.loadFavorites()
+
+            adsToDisplay = storage.favoritedAds
             configure(for: .favorites)
         } catch {
             // Note: Still not sure what todo when this fails...
@@ -129,8 +127,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             }
 
             self.storage.use(response)
-            self.updateCollectionView(from: self.storage.favoritedAds, to: self.storage.allAds)
             self.indicatorView.animates = false
+            self.updateCollectionView(from: self.storage.favoritedAds, to: self.storage.allAds)
         }
     }
 
@@ -157,13 +155,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     }
 
     private func updateCollectionView(from: [AdObject], to: [AdObject]) {
-        // Initially there won't be a properly configured datasource collection
-        guard !adsToDisplay.isEmpty else {
-            adsToDisplay += to
-            collectionView.reloadData()
-            return
-        }
-
         let toDeleteItems: [IndexPath?] =  from.enumerated().map { (index, element) in
             var indexPath: IndexPath?
             if !to.contains(where: { $0.id == element.id }) {
@@ -234,19 +225,33 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     func toggleFavorite(for ad: AdObject, checked: Bool) {
         do {
-            checked ? try storage.add(ad) : try storage.remove(ad)
-        } catch {
-            // Note: we should let user know the operation failed..
-        }
-
-        if currentState == .favorites, let item = storage.favoritedAds.firstIndex(where: { $0.id == ad.id }) {
-            if storage.favoritedAds.isEmpty {
-                configure(for: .emptyFavorites)
-            } else {
+            if checked {
+                try storage.add(ad)
+                // Handle the case where we have no favorites and going from empty view to populate the collection view
+                if adsToDisplay.isEmpty {
+                    adsToDisplay.append(ad)
+                    collectionView.insertItems(at: [IndexPath(item: 0, section: 0)])
+                }
+                    // The ad is already visible we just need to trigger reload
+                else  if currentState == .favorites, let index = storage.favoritedAds.firstIndex(where: { $0.id == ad.id }) {
+                    collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+                } else if let index = storage.allAds.firstIndex(where: { $0.id == ad.id }) {
+                    collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+                }
+            } else if currentState == .favorites, let index = storage.favoritedAds.firstIndex(where: { $0.id == ad.id }) {
+                try storage.remove(ad)
+                adsToDisplay.remove(at: index)
+                collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
+                // Last favorite was removed, show the empty view
+                if storage.favoritedAds.isEmpty {
+                    configure(for: .emptyFavorites)
+                }
+            } else if let item = storage.allAds.firstIndex(where: { $0.id == ad.id }) {
+                // In the case of all ads, we don't need to remove the ad. Just reload.
                 collectionView.reloadItems(at: [IndexPath(item: item, section: 0)])
             }
-        } else if let item = storage.allAds.firstIndex(where: { $0.id == ad.id }) {
-            collectionView.reloadItems(at: [IndexPath(item: item, section: 0)])
+        } catch {
+            // Note: we should let user know the operation failed..
         }
     }
 }

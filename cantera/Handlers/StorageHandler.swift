@@ -36,12 +36,12 @@ class StorageHandler {
 
     public func loadFavorites() throws {
         guard let ads = try savedAds() else { return }
-        favoritedAds = ads
+        favoritedAds = ads.sorted(by: { $0.title < $1.title })
     }
 
     // Note: not a great name, pick a different one.
     public func use(_ ads: [AdObject]) {
-        allAds = ads
+        allAds = ads.sorted(by: { $0.title < $1.title })
     }
 
     public func purge() {
