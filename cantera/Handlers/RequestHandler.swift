@@ -57,20 +57,34 @@ class RequestHandler {
     // MARK: - Public
 
     public func fetch(completion completionHandler: @escaping ([AdObject]) -> Void) {
-        guard let url = Endpoints.json.url() else { return }
+        guard let url = Endpoints.json.url() else {
+            // This call site is very unlikely to ever be reached, but just in case pass empty
+            completionHandler([])
+            return
+        }
 
-        URLSession.shared.dataTask(with: url) { (data, _, _) in
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            var ads = [AdObject]()
             if let data = data {
-                var ads = [AdObject]()
                 do {
                     let adsResponse =  try JSONDecoder().decode(AdsResponse.self, from: data)
                     ads = adsResponse.items.map { AdObject(adResponse: $0) }
                     // Drop all of the ads that are missing the price
                     ads.removeAll { $0.price == nil }
                 } catch {}
-                DispatchQueue.main.async {
-                    completionHandler(ads)
-                }
+            }
+
+            // Note: we should do something useful with the error and response.
+            // Maybe provide better titles / messages in the UI?
+            if let error = error {
+                DebugHandler.print_string("\(#function): error -> \(error)")
+            }
+            if let res = response {
+                DebugHandler.print_string("\(#function): response -> \(res)")
+            }
+
+            DispatchQueue.main.async {
+                completionHandler(ads)
             }
             }.resume()
     }

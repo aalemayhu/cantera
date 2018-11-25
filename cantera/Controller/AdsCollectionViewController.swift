@@ -73,8 +73,8 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         setup()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
         if let selectedIndexPath = self.lastSelectedIndexPath {
             if currentState == .favorites {
@@ -84,8 +84,12 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
                 collectionView.reloadItems(at: [selectedIndexPath])
             }
             self.lastSelectedIndexPath = nil
+        } else if currentState == .favorites && adsToDisplay.isEmpty {
+            configure(for: .favorites)
+        } else if adsToDisplay.isEmpty {
+            loadRemoteAds(updateView: true)
         }
-      }
+    }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         self.collectionViewLayout.invalidateLayout()
@@ -136,12 +140,6 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         } catch {
             // Note: Still not sure what todo when this fails...
         }
-
-        if !storage.favoritedAds.isEmpty {
-            configure(for: .favorites)
-        } else {
-            loadRemoteAds(updateView: true)
-        }
     }
 
     private func loadRemoteAds(updateView: Bool = false) {
@@ -163,7 +161,11 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             updateCollectionView(from: storage.favoritedAds, to: storage.allAds)
             // No Ads to display, fallback to empty view
             if storage.allAds.isEmpty {
-                fallthrough
+                if emptyAdsView.isHidden {
+                    fallthrough
+                } else {
+                    loadRemoteAds(updateView: true)
+                }
             }
         case .emptyAds:
             emptyAdsView.isHidden = false
