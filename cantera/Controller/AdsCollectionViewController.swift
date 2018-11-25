@@ -48,7 +48,10 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     private let indicatorView = LoadingIndicatorView()
     private var adsToDisplay = [AdObject]()
 
-    let emptyFavoritesView = EmptyFavoritesView()
+    private let emptyFavoritesTitle = "Finner du noe du liker?"
+    private let emptyFavoritesMessage = "Trykk på det lille hjertet i høyre hjørne ved annnonsen. Da legger annonsen seg under \"Favoritter\", slik at det blir lettere å finne den igjen"
+
+    private lazy var emptyFavoritesView = EmptyCollectionView(title: emptyFavoritesTitle, message: emptyFavoritesMessage)
 
     // MARK: - View lifecycle
 
