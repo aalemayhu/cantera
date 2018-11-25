@@ -62,7 +62,12 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         super.viewDidAppear(animated)
 
         if let selectedIndexPath = self.lastSelectedIndexPath {
-            collectionView.reloadItems(at: [selectedIndexPath])
+            if currentState == .favorites {
+                adsToDisplay.remove(at: selectedIndexPath.item)
+                collectionView.deleteItems(at: [selectedIndexPath])
+            } else {
+                collectionView.reloadItems(at: [selectedIndexPath])
+            }
             self.lastSelectedIndexPath = nil
         }
       }
@@ -233,12 +238,12 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
                     collectionView.insertItems(at: [IndexPath(item: 0, section: 0)])
                 }
                     // The ad is already visible we just need to trigger reload
-                else  if currentState == .favorites, let index = storage.favoritedAds.firstIndex(where: { $0.id == ad.id }) {
+                else  if currentState == .favorites, let index = adsToDisplay.firstIndex(where: { $0.id == ad.id }) {
                     collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
                 } else if let index = storage.allAds.firstIndex(where: { $0.id == ad.id }) {
                     collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
                 }
-            } else if currentState == .favorites, let index = storage.favoritedAds.firstIndex(where: { $0.id == ad.id }) {
+            } else if currentState == .favorites, let index = adsToDisplay.firstIndex(where: { $0.id == ad.id }) {
                 try storage.remove(ad)
                 adsToDisplay.remove(at: index)
                 collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
@@ -278,7 +283,6 @@ extension AdsCollectionViewController: AdsDetailViewControllerDatasource, AdsDet
     func pressedFavorite(for ad: AdObject, checked: Bool) {
         do {
             guard checked else {
-                lastSelectedIndexPath = nil /// Handle internal inconcistentcy
                 try storage.remove(ad)
                 return
             }
