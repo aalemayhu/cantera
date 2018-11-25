@@ -13,7 +13,9 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
     enum States: String {
         case all = "Annonser"
         case favorites = "Favoritter"
-        case emptyFavorites = "Tomt"
+        // Below strings are not visible in UI, should they be?
+        case emptyFavorites = "Ingen favoritter enda?"
+        case emptyAds = "Ingen annonser"
     }
 
     private var currentState: States {
@@ -23,6 +25,9 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             return state
         }
         set {
+            emptyFavoritesView.isHidden = true
+            emptyAdsView.isHidden = true
+
             // View being in empty favorites state should not affect the switch
             guard newValue != .emptyFavorites else { return }
             favoritesSwitch.isOn = newValue == .favorites
@@ -53,11 +58,18 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
 
     private lazy var emptyFavoritesView = EmptyCollectionView(title: emptyFavoritesTitle, message: emptyFavoritesMessage)
 
+    private let emptyAdsTitle = "Frakoblet?"
+    private let emptyAdsMessage = "Vi får ikke kontaktet serveren. Sjekk at du er koblet til trådløst nett eller mobildata."
+
+    private lazy var emptyAdsView = EmptyCollectionView(title: emptyAdsTitle, message: emptyAdsMessage)
+
     // MARK: - View lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        [indicatorView, emptyFavoritesView].forEach { self.view.addSubview($0) }
+        [indicatorView, emptyFavoritesView, emptyAdsView].forEach { self.view.addSubview($0) }
+        emptyFavoritesView.isHidden = true
+        emptyAdsView.isHidden = true
         setup()
     }
 
@@ -109,51 +121,55 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             emptyFavoritesView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 1)
             ])
 
+        NSLayoutConstraint.activate([
+            emptyAdsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyAdsView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyAdsView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 1),
+            emptyAdsView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 1)
+            ])
+
         api.cacheLimit = 50
         do {
             try storage.loadFavorites()
 
             adsToDisplay = storage.favoritedAds
-            configure(for: .favorites)
         } catch {
             // Note: Still not sure what todo when this fails...
         }
 
-        // If we have favorites, start there
-        guard !storage.favoritedAds.isEmpty else {
-            configure(for: .all)
-            return
+        if !storage.favoritedAds.isEmpty {
+            configure(for: .favorites)
+        } else {
+            loadRemoteAds(updateView: true)
         }
     }
 
-    private func loadRemoteAds() {
-        indicatorView.animates = true
+    private func loadRemoteAds(updateView: Bool = false) {
+        indicatorView.animates = updateView
         api.fetch { (response) in
-            guard response.count > 0 else {
-                self.indicatorView.animates = false
-                return
-            }
-
             self.storage.use(response)
-            self.indicatorView.animates = false
-            self.updateCollectionView(from: self.storage.favoritedAds, to: self.storage.allAds)
+            if updateView {
+                self.indicatorView.animates = !updateView
+                self.configure(for: .all)
+            }
         }
     }
 
     private func configure(for newState: States) {
-        emptyFavoritesView.isHidden = true
         currentState = newState
 
         switch newState {
         case .all:
-            guard storage.allAds.count > 0 else {
-                loadRemoteAds()
-                return
-            }
             updateCollectionView(from: storage.favoritedAds, to: storage.allAds)
+            // No Ads to display, fallback to empty view
+            if storage.allAds.isEmpty {
+                fallthrough
+            }
+        case .emptyAds:
+            emptyAdsView.isHidden = false
         case .favorites:
             updateCollectionView(from: storage.allAds, to: storage.favoritedAds)
-            // No favorites on initial configuring, fallback to empty
+            // No favorites on initial configuring, fallback to empty view
             if storage.favoritedAds.isEmpty {
                 fallthrough
             }
