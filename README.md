@@ -19,12 +19,12 @@ links for your convenience ;)
 
 ## Design
 
-The app consists mainly of two view controllers [AdsCollectionViewController](cantera/Controller/AdsCollectionViewController.swift) and 
-[AdsDetailViewController](cantera/Controller/AdsDetailViewController.swift). The AdsCollectionViewController let's you pick advertisements from the grid
-which are then opened in the detail view. I was initially going to with a
-UISwitch to toggle between all ads and the favourites, but after asking for
-feedback from a friend. He suggested instead to use bar button items and a
-stronger colour for the favorite icon. I incorporated his feedback.
+The app consists of one view controller [AdsCollectionViewController](cantera/Controller/AdsCollectionViewController.swift). 
+The controllers main content view is a collection view that uses the [AdViewCollectionViewCell](cantera/View/AdViewCollectionViewCell.swift).
+The other views are [LoadingIndicatorView](cantera/View/LoadingIndicatorView.swift), [EmptyCollectionView](cantera/View/EmptyCollectionView.swift) and [FavoriteButton](cantera/View/FavoriteButton.swift).
+
+The networking requests are managed by the [RequestHandler](cantera/Handlers/RequestHandler.swift).
+For the persistence [StorageHandler](cantera/Handlers/StorageHandler.swift) is used.
 
 ## Potential improvements
 
@@ -48,7 +48,6 @@ Misc topics
 - Cleanup strategy for persisted file
 - Mentioned earlier above, but a proper error strategy
 - Performance tuning using instruments
-- Polish the detail view of an ad (fix orientation)
 
 One more thing. The feature I wanted to add was a collection of predefined
 layouts the user could switch between. So for ex. you would press a
