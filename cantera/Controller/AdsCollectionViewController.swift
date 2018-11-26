@@ -110,6 +110,7 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
         collectionView.contentInsetAdjustmentBehavior = .always
         collectionView.backgroundColor = .white
         title = States.all.rawValue
+        currentState = .favorites
 
         NSLayoutConstraint.activate([
             indicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
