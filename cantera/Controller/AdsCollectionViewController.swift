@@ -161,11 +161,10 @@ class AdsCollectionViewController: UICollectionViewController, AdViewCollectionV
             updateCollectionView(from: storage.favoritedAds, to: storage.allAds)
             // No Ads to display, fallback to empty view
             if storage.allAds.isEmpty {
-                if emptyAdsView.isHidden {
+                if !emptyAdsView.isHidden {
                     fallthrough
-                } else {
-                    loadRemoteAds(updateView: true)
                 }
+                loadRemoteAds(updateView: true)
             }
         case .emptyAds:
             emptyAdsView.isHidden = false
