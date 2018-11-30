@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8438A8FD21B12F1B00E455B7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8438A8FC21B12F1B00E455B7 /* README.md */; };
 		8442CAC3219C082C006F8A30 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC2219C082C006F8A30 /* AppDelegate.swift */; };
 		8442CAC5219C082C006F8A30 /* AdsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442CAC4219C082C006F8A30 /* AdsCollectionViewController.swift */; };
 		8442CACA219C082D006F8A30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8442CAC9219C082D006F8A30 /* Assets.xcassets */; };
@@ -84,6 +85,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8438A8FC21B12F1B00E455B7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		8442CABF219C082C006F8A30 /* cantera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cantera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8442CAC2219C082C006F8A30 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8442CAC4219C082C006F8A30 /* AdsCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsCollectionViewController.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 		8442CAB6219C082C006F8A30 = {
 			isa = PBXGroup;
 			children = (
+				8438A8FC21B12F1B00E455B7 /* README.md */,
 				8442CAC1219C082C006F8A30 /* cantera */,
 				8442CAD6219C082D006F8A30 /* canteraTests */,
 				8442CAE1219C082D006F8A30 /* canteraUITests */,
@@ -364,6 +367,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8438A8FD21B12F1B00E455B7 /* README.md in Resources */,
 				8442CACD219C082D006F8A30 /* LaunchScreen.storyboard in Resources */,
 				8442CACA219C082D006F8A30 /* Assets.xcassets in Resources */,
 			);
