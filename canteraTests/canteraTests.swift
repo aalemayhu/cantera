@@ -72,7 +72,7 @@ class CanteraTests: XCTestCase {
 
             // Check storage manager is acting sane
             let sm = StorageHandler()
-            sm.add(AdObject(adResponse: ad))
+            try sm.add(AdObject(adResponse: ad))
             let actual = sm.favoritedAds
             XCTAssertNotNil(actual)
             XCTAssertTrue(actual.count > 0)

@@ -15,8 +15,8 @@ class CanteraUITests: XCTestCase {
         let expectation = XCTestExpectation(description: "Wait until we have a payload from the API")
         let api = RequestHandler()
 
-        api.fetch { (count) in
-            XCTAssertTrue(count > 0)
+        api.fetch { (ads) in
+            XCTAssertTrue(ads.count > 0)
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 60.0)
